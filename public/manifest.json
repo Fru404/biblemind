@@ -1,6 +1,6 @@
 {
   "name": "Bible Mind",
-  "short_name": "Interactive religious reads",
+  "short_name": "BibleMind",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
