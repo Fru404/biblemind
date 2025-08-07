@@ -156,7 +156,9 @@ export default function Home() {
       {/* MAIN SECTION */}
       <main className="flex-grow px-4 py-6 md:px-12">
         <div className="text-center mb-6">
-          <h1 className="text-4xl font-bold text-[#8B0000]">BibleMind</h1>
+          <h1 className="text-3xl font-bold text-[#8B0000]">
+            Daily scripture reading
+          </h1>
           <p className="text-md mt-2 text-gray-700">
             Daily Vatican Readings & Reflections
           </p>
