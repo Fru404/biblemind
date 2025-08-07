@@ -5,25 +5,77 @@ import { FaBars, FaTimes } from "react-icons/fa";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+
+  // Start with empty string to avoid hydration mismatch
+  const [selectedDate, setSelectedDate] = useState("");
 
   const [readings, setReadings] = useState({
-    ot: "",
-    nt: "",
-    pope: "",
+    ot: "Loading...",
+    gospel: "Loading...",
+    pope: "Loading...",
   });
+
+  // Set the current date only on client after mount
   useEffect(() => {
+    setSelectedDate(new Date().toISOString().split("T")[0]);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedDate) return; // don't fetch if date is not set yet
+
     const fetchReadings = async () => {
-      const response = await fetch(`/api/reading?date=${selectedDate}`);
-      const data = await response.json();
-      setReadings(data);
+      try {
+        const response = await fetch(
+          `https://biblemind-api-cw-gpycraft.onrender.com/sheet-data`
+        );
+
+        const textData = await response.text();
+        let data = JSON.parse(textData);
+        if (typeof data === "string") {
+          data = JSON.parse(data);
+        }
+
+        if (!Array.isArray(data)) {
+          console.error("Expected array but got:", data);
+          setReadings({
+            ot: "Data format error.",
+            gospel: "Data format error.",
+            pope: "Data format error.",
+          });
+          return;
+        }
+
+        const matched = data.find((entry: any) => {
+          const entryDate = entry.date?.split("/").reverse().join("-");
+          return entryDate === selectedDate;
+        });
+
+        if (matched) {
+          setReadings({
+            ot: matched.ot || "No Old Testament reading found.",
+            gospel: matched.gospel || "No Gospel reading found.",
+            pope: matched.pope || "No Pope's reflection found.",
+          });
+        } else {
+          setReadings({
+            ot: "No Old Testament reading available for this date.",
+            gospel: "No Gospel reading available for this date.",
+            pope: "No Pope's reflection available for this date.",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching readings:", error);
+        setReadings({
+          ot: "Error loading Old Testament reading.",
+          gospel: "Error loading Gospel reading.",
+          pope: "Error loading Pope's reflection.",
+        });
+      }
     };
     fetchReadings();
   }, [selectedDate]);
-  // Placeholder content — later replaced by API data
 
+  // ... rest of your component unchanged
   return (
     <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
       {/* NAVBAR */}
@@ -126,21 +178,21 @@ export default function Home() {
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
               Old Testament
             </h2>
-            <p>{readings.ot}</p>
+            <p className="whitespace-pre-line">{readings.ot}</p>
           </section>
 
           <section className="bg-white rounded shadow p-4">
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              New Testament
+              Gospel
             </h2>
-            <p>{readings.nt}</p>
+            <p className="whitespace-pre-line">{readings.gospel}</p>
           </section>
 
           <section className="bg-white rounded shadow p-4">
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
               Pope's Words
             </h2>
-            <p>{readings.pope}</p>
+            <p className="whitespace-pre-line">{readings.pope}</p>
           </section>
         </div>
       </main>
