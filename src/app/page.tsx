@@ -2,7 +2,12 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-
+interface ReadingEntry {
+  date?: string;
+  ot?: string;
+  gospel?: string;
+  pope?: string;
+}
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -45,7 +50,7 @@ export default function Home() {
           return;
         }
 
-        const matched = data.find((entry: any) => {
+        const matched = data.find((entry: ReadingEntry) => {
           const entryDate = entry.date?.split("/").reverse().join("-");
           return entryDate === selectedDate;
         });
