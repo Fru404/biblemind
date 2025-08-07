@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 
@@ -54,13 +54,13 @@ export default function Home() {
           setReadings({
             ot: matched.ot || "No Old Testament reading found.",
             gospel: matched.gospel || "No Gospel reading found.",
-            pope: matched.pope || "No Pope's reflection found.",
+            pope: matched.pope || "No Pope reflection found.",
           });
         } else {
           setReadings({
             ot: "No Old Testament reading available for this date.",
             gospel: "No Gospel reading available for this date.",
-            pope: "No Pope's reflection available for this date.",
+            pope: "No Pope reflection available for this date.",
           });
         }
       } catch (error) {
@@ -192,7 +192,7 @@ export default function Home() {
 
           <section className="bg-white rounded shadow p-4">
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Pope's Words
+              Words of the pope
             </h2>
             <p className="whitespace-pre-line">{readings.pope}</p>
           </section>
