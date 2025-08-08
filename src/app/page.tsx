@@ -126,8 +126,8 @@ export default function Home() {
           <Link href="#" className="hover:text-gray-300 transition">
             Home
           </Link>
-          <Link href="#" className="hover:text-gray-300 transition">
-            Devotions
+          <Link href="/devotions" className="hover:text-gray-300 transition">
+            Rosary
           </Link>
           <Link href="#" className="hover:text-gray-300 transition">
             About
@@ -168,8 +168,9 @@ export default function Home() {
             onClick={() => setMenuOpen(false)}
             className="hover:text-gray-300"
           >
-            Devotions
+            Rosary
           </Link>
+
           <Link
             href="#"
             onClick={() => setMenuOpen(false)}
