@@ -19,6 +19,7 @@ export default function Home() {
     gospel: "Loading...",
     pope: "Loading...",
   });
+  const [loading, setLoading] = useState(false); // <-- new loading state
 
   // Set initial selected date to today on mount
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function Home() {
   useEffect(() => {
     if (!selectedDate) return;
     const fetchReadings = async () => {
+      setLoading(true); // start loading
       // Try getting cached readings first
       const cachedDataString = localStorage.getItem("biblemind-cache");
       let cache: Record<string, ReadingEntry> = {};
@@ -43,6 +45,7 @@ export default function Home() {
 
       if (cache[selectedDate]) {
         setReadings(cache[selectedDate]);
+        setLoading(false); // end loading early if cached
         return;
       }
 
@@ -68,6 +71,7 @@ export default function Home() {
           setReadings(errorData);
           cache[selectedDate] = errorData;
           localStorage.setItem("biblemind-cache", JSON.stringify(cache));
+          setLoading(false);
           return;
         }
 
@@ -81,6 +85,7 @@ export default function Home() {
         setReadings(result);
         cache[selectedDate] = result;
         localStorage.setItem("biblemind-cache", JSON.stringify(cache));
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching readings:", error);
         const errorData: ReadingEntry = {
@@ -91,11 +96,19 @@ export default function Home() {
         setReadings(errorData);
         cache[selectedDate] = errorData;
         localStorage.setItem("biblemind-cache", JSON.stringify(cache));
+        setLoading(false);
       }
     };
 
     fetchReadings();
   }, [selectedDate]);
+
+  // Simple spinner component
+  const Spinner = () => (
+    <div className="flex justify-center items-center h-20">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#8B0000]"></div>
+    </div>
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
@@ -223,25 +236,37 @@ export default function Home() {
 
         {/* Readings Display */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <section className="bg-white rounded shadow p-4">
+          <section className="bg-white rounded shadow p-4 min-h-[140px]">
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
               Old Testament
             </h2>
-            <p className="whitespace-pre-line">{readings.ot}</p>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <p className="whitespace-pre-line">{readings.ot}</p>
+            )}
           </section>
 
-          <section className="bg-white rounded shadow p-4">
+          <section className="bg-white rounded shadow p-4 min-h-[140px]">
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
               Gospel
             </h2>
-            <p className="whitespace-pre-line">{readings.gospel}</p>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <p className="whitespace-pre-line">{readings.gospel}</p>
+            )}
           </section>
 
-          <section className="bg-white rounded shadow p-4">
+          <section className="bg-white rounded shadow p-4 min-h-[140px]">
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
               Words of the pope
             </h2>
-            <p className="whitespace-pre-line">{readings.pope}</p>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <p className="whitespace-pre-line">{readings.pope}</p>
+            )}
           </section>
         </div>
       </main>
