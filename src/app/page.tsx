@@ -1,9 +1,8 @@
-//src/app/page.tsx
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import Link from "next/link";
+import { toDDMMYYYY } from "@/src/app/utils/dd-mm-yyyy";
 
 interface ReadingEntry {
   date?: string;
@@ -21,21 +20,23 @@ export default function Home() {
     pope: "Loading...",
   });
 
-  // Load current date on mount
+  // Set initial selected date to today on mount
   useEffect(() => {
-    setSelectedDate(new Date().toISOString().split("T")[0]);
+    const today = new Date().toISOString().split("T")[0];
+    const formattedDate = toDDMMYYYY(today);
+    setSelectedDate(formattedDate);
   }, []);
 
   useEffect(() => {
     if (!selectedDate) return;
 
     const fetchReadings = async () => {
-      // Check localStorage cache
+      // Try getting cached readings first
       const cachedDataString = localStorage.getItem("biblemind-cache");
       let cache: Record<string, ReadingEntry> = {};
       if (cachedDataString) {
         try {
-          cache = JSON.parse(cachedDataString) as Record<string, ReadingEntry>;
+          cache = JSON.parse(cachedDataString);
         } catch {
           cache = {};
         }
@@ -48,22 +49,23 @@ export default function Home() {
 
       try {
         const response = await fetch(
-          `https://biblemind-api-cw-gpycraft.onrender.com/sheet-data`,
+          `https://biblemind-api-cw-gpycraft.onrender.com/sheet-data?date=${selectedDate}`,
           { cache: "force-cache" }
         );
 
-        const textData = await response.text();
-        let data: unknown = JSON.parse(textData);
-        if (typeof data === "string") {
-          data = JSON.parse(data);
+        if (!response.ok) {
+          throw new Error(`API returned status ${response.status}`);
         }
 
-        if (!Array.isArray(data)) {
-          console.error("Expected array but got:", data);
+        const data = await response.json();
+
+        // If backend returns error message
+        if ("error" in data) {
+          const errorMsg = data.error || "Unknown API error";
           const errorData: ReadingEntry = {
-            ot: "Data format error.",
-            gospel: "Data format error.",
-            pope: "Data format error.",
+            ot: `Error: ${errorMsg}`,
+            gospel: `Error: ${errorMsg}`,
+            pope: `Error: ${errorMsg}`,
           };
           setReadings(errorData);
           cache[selectedDate] = errorData;
@@ -71,22 +73,13 @@ export default function Home() {
           return;
         }
 
-        const matched = data.find((entry: ReadingEntry) => {
-          const entryDate = entry.date?.split("/").reverse().join("-");
-          return entryDate === selectedDate;
-        });
-
-        const result: ReadingEntry = matched
-          ? {
-              ot: matched.ot || "No Old Testament reading found.",
-              gospel: matched.gospel || "No Gospel reading found.",
-              pope: matched.pope || "No Pope reflection found.",
-            }
-          : {
-              ot: "No Old Testament reading available for this date.",
-              gospel: "No Gospel reading available for this date.",
-              pope: "No Pope reflection available for this date.",
-            };
+        // Use returned reading object directly
+        const result: ReadingEntry = {
+          ot: data.ot || "No Old Testament reading found.",
+          gospel: data.gospel || "No Gospel reading found.",
+          pope: data.pope || "No Pope reflection found.",
+          date: data.date || selectedDate,
+        };
 
         setReadings(result);
         cache[selectedDate] = result;
