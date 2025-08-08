@@ -185,9 +185,8 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Flex container with calendar on left and readings on right */}
-        <div className="flex gap-6">
-          {/* Calendar Picker on the left */}
+        {/* Calendar Picker */}
+        <div className="flex justify-center mb-6">
           <div className="w-64 bg-white p-4 rounded shadow-md border border-gray-200">
             <label
               htmlFor="date-picker"
@@ -220,30 +219,30 @@ export default function Home() {
               className="w-full border border-gray-300 rounded px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
             />
           </div>
+        </div>
 
-          {/* Readings Display on the right */}
-          <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-6">
-            <section className="bg-white rounded shadow p-4">
-              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-                Old Testament
-              </h2>
-              <p className="whitespace-pre-line">{readings.ot}</p>
-            </section>
+        {/* Readings Display */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <section className="bg-white rounded shadow p-4">
+            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+              Old Testament
+            </h2>
+            <p className="whitespace-pre-line">{readings.ot}</p>
+          </section>
 
-            <section className="bg-white rounded shadow p-4">
-              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-                Gospel
-              </h2>
-              <p className="whitespace-pre-line">{readings.gospel}</p>
-            </section>
+          <section className="bg-white rounded shadow p-4">
+            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+              Gospel
+            </h2>
+            <p className="whitespace-pre-line">{readings.gospel}</p>
+          </section>
 
-            <section className="bg-white rounded shadow p-4">
-              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-                Words of the pope
-              </h2>
-              <p className="whitespace-pre-line">{readings.pope}</p>
-            </section>
-          </div>
+          <section className="bg-white rounded shadow p-4">
+            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+              Words of the pope
+            </h2>
+            <p className="whitespace-pre-line">{readings.pope}</p>
+          </section>
         </div>
       </main>
 
