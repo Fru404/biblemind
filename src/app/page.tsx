@@ -29,7 +29,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!selectedDate) return;
-
     const fetchReadings = async () => {
       // Try getting cached readings first
       const cachedDataString = localStorage.getItem("biblemind-cache");
@@ -59,7 +58,6 @@ export default function Home() {
 
         const data = await response.json();
 
-        // If backend returns error message
         if ("error" in data) {
           const errorMsg = data.error || "Unknown API error";
           const errorData: ReadingEntry = {
@@ -73,7 +71,6 @@ export default function Home() {
           return;
         }
 
-        // Use returned reading object directly
         const result: ReadingEntry = {
           ot: data.ot || "No Old Testament reading found.",
           gospel: data.gospel || "No Gospel reading found.",
@@ -188,38 +185,65 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Calendar Picker */}
-        <div className="flex justify-center mb-6">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="border border-gray-300 rounded px-3 py-2 shadow"
-          />
-        </div>
+        {/* Flex container with calendar on left and readings on right */}
+        <div className="flex gap-6">
+          {/* Calendar Picker on the left */}
+          <div className="w-64 bg-white p-4 rounded shadow-md border border-gray-200">
+            <label
+              htmlFor="date-picker"
+              className="block text-gray-700 font-semibold mb-2"
+            >
+              Select Date
+            </label>
+            <input
+              id="date-picker"
+              type="date"
+              value={
+                selectedDate
+                  ? (() => {
+                      const parts = selectedDate.split("-");
+                      return parts.length === 3
+                        ? `${parts[2]}-${parts[1]}-${parts[0]}`
+                        : "";
+                    })()
+                  : ""
+              }
+              onChange={(e) => {
+                const isoDate = e.target.value;
+                if (isoDate) {
+                  const formatted = toDDMMYYYY(isoDate);
+                  setSelectedDate(formatted);
+                } else {
+                  setSelectedDate("");
+                }
+              }}
+              className="w-full border border-gray-300 rounded px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
+            />
+          </div>
 
-        {/* Readings Display */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <section className="bg-white rounded shadow p-4">
-            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Old Testament
-            </h2>
-            <p className="whitespace-pre-line">{readings.ot}</p>
-          </section>
+          {/* Readings Display on the right */}
+          <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-6">
+            <section className="bg-white rounded shadow p-4">
+              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+                Old Testament
+              </h2>
+              <p className="whitespace-pre-line">{readings.ot}</p>
+            </section>
 
-          <section className="bg-white rounded shadow p-4">
-            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Gospel
-            </h2>
-            <p className="whitespace-pre-line">{readings.gospel}</p>
-          </section>
+            <section className="bg-white rounded shadow p-4">
+              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+                Gospel
+              </h2>
+              <p className="whitespace-pre-line">{readings.gospel}</p>
+            </section>
 
-          <section className="bg-white rounded shadow p-4">
-            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Words of the pope
-            </h2>
-            <p className="whitespace-pre-line">{readings.pope}</p>
-          </section>
+            <section className="bg-white rounded shadow p-4">
+              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+                Words of the pope
+              </h2>
+              <p className="whitespace-pre-line">{readings.pope}</p>
+            </section>
+          </div>
         </div>
       </main>
 
