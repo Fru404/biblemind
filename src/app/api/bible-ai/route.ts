@@ -14,13 +14,13 @@ export async function POST(req: Request) {
     const { messages, context } = await req.json();
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const history = (messages as ChatMessage[])
-         .map((m) => `${m.role === "user" ? "User" : "AI"}: ${m.content}`)
-         .join("\n");
 
+    const history = (messages as ChatMessage[])
+      .map((m) => `${m.role === "user" ? "User" : "AI"}: ${m.content}`)
+      .join("\n");
 
     const prompt = `
-You are BibleMind AI. Your role is to explain daily Vatican scripture readings and Pope's reflections.
+You are BibleMind AI. Your role is to explain daily Vatican scripture readings and Pope's reflections. Be empathetic to their sin and relate what happens in their life and what is in scriptures
 
 Here are today's readings:
 ${context}
@@ -35,8 +35,14 @@ Answer the last user question clearly and thoughtfully.
     const response = result.response.text();
 
     return NextResponse.json({ reply: response });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Gemini API error:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+
+    // fallback for unknown error types
+    return NextResponse.json({ error: "Unknown error occurred" }, { status: 500 });
   }
 }
