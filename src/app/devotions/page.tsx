@@ -49,7 +49,7 @@ export default function DevotionsPage() {
 
   const mysteries: Mystery[] = [
     {
-      name: "Joyful Mysteries",
+      name: "Joyful Mysteries(Mondays & Saturdays)",
       prayers: [
         "The Annunciation",
         "The Visitation",
@@ -66,7 +66,7 @@ export default function DevotionsPage() {
       ],
     },
     {
-      name: "Sorrowful Mysteries",
+      name: "Sorrowful Mysteries(Tuesdays & Fridays)",
       prayers: [
         "The Agony in the Garden",
         "The Scourging at the Pillar",
@@ -83,7 +83,7 @@ export default function DevotionsPage() {
       ],
     },
     {
-      name: "Glorious Mysteries",
+      name: "Glorious Mysteries(Sundays & Wednesdays)",
       prayers: [
         "The Resurrection",
         "The Ascension",
@@ -100,7 +100,7 @@ export default function DevotionsPage() {
       ],
     },
     {
-      name: "Luminous Mysteries",
+      name: "Luminous Mysteries(Thursdays)",
       prayers: [
         "The Baptism of Our Lord",
         "The Wedding at Cana",
@@ -122,7 +122,7 @@ export default function DevotionsPage() {
     <div className="min-h-screen bg-[#f5f5f5] text-gray-900 flex flex-col">
       {/* Navbar */}
       <nav className="bg-[#8B0000] text-white px-6 py-4 shadow-md flex justify-between items-center">
-        <h1 className="text-xl font-bold">Rosary</h1>
+        <h1 className="text-xl font-bold">Devotions</h1>
         <Link href="/" className="hover:text-gray-300 transition">
           Back to Home
         </Link>

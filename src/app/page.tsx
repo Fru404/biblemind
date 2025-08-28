@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import Link from "next/link";
 import { toDDMMYYYY } from "@/src/app/utils/dd-mm-yyyy";
+import AIbiblemind from "./component/AIbiblemind";
 
 interface ReadingEntry {
   date?: string;
@@ -206,7 +207,7 @@ export default function Home() {
               htmlFor="date-picker"
               className="block text-gray-700 font-semibold mb-2"
             >
-              Select Date
+              Date
             </label>
             <input
               id="date-picker"
@@ -239,7 +240,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <section className="bg-white rounded shadow p-4 min-h-[140px]">
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Old Testament
+              Readings
             </h2>
             {loading ? (
               <Spinner />
@@ -252,6 +253,7 @@ export default function Home() {
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
               Gospel
             </h2>
+            <AIbiblemind />
             {loading ? (
               <Spinner />
             ) : (
