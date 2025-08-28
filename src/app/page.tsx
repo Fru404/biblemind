@@ -253,7 +253,10 @@ export default function Home() {
             <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
               Gospel
             </h2>
-            <AIbiblemind />
+            <AIbiblemind
+              contextText={`${readings.ot}\n\n${readings.gospel}\n\n${readings.pope}`}
+            />
+
             {loading ? (
               <Spinner />
             ) : (
