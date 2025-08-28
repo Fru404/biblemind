@@ -2,6 +2,11 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
@@ -9,10 +14,10 @@ export async function POST(req: Request) {
     const { messages, context } = await req.json();
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const history = (messages as ChatMessage[])
+         .map((m) => `${m.role === "user" ? "User" : "AI"}: ${m.content}`)
+         .join("\n");
 
-    const history = (messages || [])
-      .map((m: any) => `${m.role === "user" ? "User" : "AI"}: ${m.content}`)
-      .join("\n");
 
     const prompt = `
 You are BibleMind AI. Your role is to explain daily Vatican scripture readings and Pope's reflections.
