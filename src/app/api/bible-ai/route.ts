@@ -47,12 +47,14 @@ Answer the last user question clearly and thoughtfully.
 
     const result = await model.generateContent(prompt);
 
-    // `result.response.text()` returns the generated text
     const response = result.response.text();
 
     return NextResponse.json({ reply: response });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Gemini API error:", err);
-    return NextResponse.json({ error: err.message || "Internal server error" }, { status: 500 });
+
+    // Safely handle unknown
+    const message = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
