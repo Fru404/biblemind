@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
-import { FaTimes, FaMinus, FaCommentDots } from "react-icons/fa";
+import React, { useState, KeyboardEvent } from "react";
+import { FaTimes, FaMinus, FaCommentDots, FaPaperPlane } from "react-icons/fa";
 
 const AIbiblemind = ({ contextText }: { contextText?: string }) => {
-  const [open, setOpen] = useState(false); // fully opened chat
-  const [minimized, setMinimized] = useState(false); // minimized but still running
+  const [open, setOpen] = useState(false);
+  const [minimized, setMinimized] = useState(false);
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     []
   );
@@ -35,7 +35,15 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
     } catch (err) {
       console.error("AI error:", err);
     }
+
     setLoading(false);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   };
 
   return (
@@ -58,11 +66,9 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
           <div className="flex justify-between items-center p-2 border-b bg-[#8B0000] text-white font-bold">
             <span>BibleMind AI</span>
             <div className="flex gap-2">
-              {/* Minimize */}
               <button onClick={() => setMinimized((m) => !m)}>
                 <FaMinus size={14} />
               </button>
-              {/* Close */}
               <button
                 onClick={() => {
                   setOpen(false);
@@ -99,14 +105,15 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
                   className="flex-1 border rounded px-2 py-1 text-sm"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="Ask about today's readings..."
                 />
                 <button
-                  className="bg-[#8B0000] text-white px-2 rounded"
+                  className="bg-[#8B0000] text-white px-2 rounded flex items-center justify-center"
                   onClick={sendMessage}
                   disabled={loading}
                 >
-                  Send
+                  <FaPaperPlane />
                 </button>
               </div>
             </>
