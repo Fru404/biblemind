@@ -7,9 +7,9 @@ interface ChatMessage {
   content: string;
 }
 
-// Make sure your API key is loaded from environment variables
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
+const apiKey = process.env.GEMINI_API_KEY; 
+if (!apiKey) { throw new Error("GEMINI_API_KEY is not defined in your environment variables."); } 
+const genAI = new GoogleGenerativeAI(apiKey);
 export async function POST(req: Request) {
   try {
     const { messages, context } = await req.json();
