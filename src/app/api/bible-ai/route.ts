@@ -7,11 +7,25 @@ interface ChatMessage {
   content: string;
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// Make sure your API key is loaded from environment variables
+const apiKey = process.env.GEMINI_API_KEY;
+
+if (!apiKey) {
+  throw new Error("GEMINI_API_KEY is not defined in your environment variables.");
+}
+
+const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function POST(req: Request) {
   try {
     const { messages, context } = await req.json();
+
+    if (!messages || !Array.isArray(messages)) {
+      return NextResponse.json(
+        { error: "Invalid request: messages array is required." },
+        { status: 400 }
+      );
+    }
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -20,7 +34,7 @@ export async function POST(req: Request) {
       .join("\n");
 
     const prompt = `
-You are BibleMind AI. Your role is to explain daily Vatican scripture readings and Pope's reflections. Be empathetic to their sin and relate what happens in their life and what is in scriptures
+You are BibleMind AI. Your role is to explain daily Vatican scripture readings and Pope's reflections. Provide response like a normal person will do
 
 Here are today's readings:
 ${context}
@@ -32,17 +46,13 @@ Answer the last user question clearly and thoughtfully.
 `;
 
     const result = await model.generateContent(prompt);
+
+    // `result.response.text()` returns the generated text
     const response = result.response.text();
 
     return NextResponse.json({ reply: response });
-  } catch (err: unknown) {
+  } catch (err: any) {
     console.error("Gemini API error:", err);
-
-    if (err instanceof Error) {
-      return NextResponse.json({ error: err.message }, { status: 500 });
-    }
-
-    // fallback for unknown error types
-    return NextResponse.json({ error: "Unknown error occurred" }, { status: 500 });
+    return NextResponse.json({ error: err.message || "Internal server error" }, { status: 500 });
   }
 }
