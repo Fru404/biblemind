@@ -1,6 +1,12 @@
 "use client";
 import React, { useState, KeyboardEvent } from "react";
-import { FaTimes, FaMinus, FaCommentDots, FaPaperPlane } from "react-icons/fa";
+import {
+  FaTimes,
+  FaMinus,
+  FaCommentDots,
+  FaPaperPlane,
+  FaTrash,
+} from "react-icons/fa";
 
 const AIbiblemind = ({ contextText }: { contextText?: string }) => {
   const [open, setOpen] = useState(false);
@@ -46,6 +52,10 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
     }
   };
 
+  const clearChat = () => {
+    setMessages([]);
+  };
+
   return (
     <div>
       {!open && (
@@ -65,8 +75,11 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
           {/* HEADER */}
           <div className="flex justify-between items-center p-2 border-b bg-[#8B0000] text-white font-bold">
             <span>BibleMind AI</span>
-            <div className="flex gap-2">
-              <button onClick={() => setMinimized((m) => !m)}>
+            <div className="flex gap-2 items-center">
+              <button onClick={clearChat} title="Clear Chat">
+                <FaTrash size={14} />
+              </button>
+              <button onClick={() => setMinimized((m) => !m)} title="Minimize">
                 <FaMinus size={14} />
               </button>
               <button
@@ -74,6 +87,7 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
                   setOpen(false);
                   setMinimized(false);
                 }}
+                title="Close"
               >
                 <FaTimes size={14} />
               </button>

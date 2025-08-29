@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaBroom } from "react-icons/fa";
 import Link from "next/link";
 import { toDDMMYYYY } from "@/src/app/utils/dd-mm-yyyy";
 import AIbiblemind from "./component/AIbiblemind";
@@ -106,10 +106,15 @@ export default function Home() {
 
   // Simple spinner component
   const Spinner = () => (
-    <div className="flex justify-center items-center h-20">
+    <div className="flex justify-center items-center h-10">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#8B0000]"></div>
     </div>
   );
+
+  const clearCache = () => {
+    localStorage.removeItem("biblemind-cache");
+    alert("Cache cleared! ");
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
@@ -199,7 +204,11 @@ export default function Home() {
             Daily Vatican Readings & Reflections
           </p>
         </div>
-
+        <div>
+          <button onClick={clearCache} title="Clear Cache">
+            <FaBroom size={20} /> clear cache in case of an error
+          </button>
+        </div>
         {/* Calendar Picker */}
         <div className="flex justify-center mb-6">
           <div className="w-64 bg-white p-4 rounded shadow-md border border-gray-200">
@@ -209,6 +218,7 @@ export default function Home() {
             >
               Date
             </label>
+
             <input
               id="date-picker"
               type="date"
@@ -280,6 +290,7 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="p-4 text-center text-sm text-gray-600">
         BibleMind. All rights reserved.
+        <Link href="ngwafru15@gmail.com">contact</Link>
       </footer>
     </div>
   );
