@@ -21,7 +21,12 @@ export default function Home() {
     pope: "Loading...",
   });
   const [loading, setLoading] = useState(false); // <-- new loading state
-  const biblemind_Key = process.env.BIBLEMIND_API_KEY!;
+  const biblemind_Key = process.env.BIBLEMIND_API_KEY;
+  if (!biblemind_Key) {
+    throw new Error(
+      "BIBLEMIND_API_KEY is not defined in your environment variables."
+    );
+  }
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     const formattedDate = toDDMMYYYY(today);
