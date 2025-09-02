@@ -21,8 +21,7 @@ export default function Home() {
     pope: "Loading...",
   });
   const [loading, setLoading] = useState(false); // <-- new loading state
-
-  // Set initial selected date to today on mount
+  const biblemind_Key = process.env.BIBLEMIND_API_KEY!;
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     const formattedDate = toDDMMYYYY(today);
@@ -32,8 +31,7 @@ export default function Home() {
   useEffect(() => {
     if (!selectedDate) return;
     const fetchReadings = async () => {
-      setLoading(true); // start loading
-      // Try getting cached readings first
+      setLoading(true);
       const cachedDataString = localStorage.getItem("biblemind-cache");
       let cache: Record<string, ReadingEntry> = {};
       if (cachedDataString) {
@@ -46,14 +44,21 @@ export default function Home() {
 
       if (cache[selectedDate]) {
         setReadings(cache[selectedDate]);
-        setLoading(false); // end loading early if cached
+        setLoading(false);
         return;
       }
 
       try {
         const response = await fetch(
           `https://biblemind-api-cw-gpycraft.onrender.com/sheet-data?date=${selectedDate}`,
-          { cache: "force-cache" }
+          {
+            method: "GET", // explicitly specify method
+            headers: {
+              "x-api-key": biblemind_Key,
+              "Content-Type": "application/json", // optional but good practice
+            },
+            cache: "force-cache",
+          }
         );
 
         if (!response.ok) {
@@ -95,8 +100,7 @@ export default function Home() {
           pope: "Error loading Pope's reflection.",
         };
         setReadings(errorData);
-        cache[selectedDate] = errorData;
-        localStorage.setItem("biblemind-cache", JSON.stringify(cache));
+
         setLoading(false);
       }
     };
@@ -107,7 +111,7 @@ export default function Home() {
   // Simple spinner component
   const Spinner = () => (
     <div className="flex justify-center items-center h-10">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#8B0000]"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#000000]"></div>
     </div>
   );
 
@@ -138,7 +142,7 @@ export default function Home() {
           <Link href="#" className="hover:text-gray-300 transition">
             About
           </Link>
-          <Link href="#" className="hover:text-gray-300 transition">
+          <Link href="/contact" className="hover:text-gray-300 transition">
             Contact
           </Link>
         </div>
@@ -185,7 +189,7 @@ export default function Home() {
             About
           </Link>
           <Link
-            href="#"
+            href="/contact"
             onClick={() => setMenuOpen(false)}
             className="hover:text-gray-300"
           >
@@ -290,7 +294,6 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="p-4 text-center text-sm text-gray-600">
         BibleMind. All rights reserved.
-        <Link href="ngwafru15@gmail.com">contact</Link>
       </footer>
     </div>
   );

@@ -60,7 +60,7 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
     <div>
       {!open && (
         <button
-          className="fixed bottom-4 right-4 bg-[#8B0000] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2"
+          className="fixed bottom-4 right-4 bg-[#8b1817] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2"
           onClick={() => {
             setOpen(true);
             setMinimized(false);
@@ -103,14 +103,14 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
                     key={i}
                     className={`p-2 rounded ${
                       m.role === "user"
-                        ? "bg-gray-200 text-gray-900 self-end"
+                        ? "bg-[#8b1817] text-white self-end"
                         : "bg-[#f5f5f5] text-gray-800"
                     }`}
                   >
                     {m.content}
                   </div>
                 ))}
-                {loading && <div className="text-gray-500">Thinking...</div>}
+                {loading && <div className="text-gray-500">...</div>}
               </div>
 
               {/* INPUT */}
