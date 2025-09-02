@@ -21,12 +21,7 @@ export default function Home() {
     pope: "Loading...",
   });
   const [loading, setLoading] = useState(false); // <-- new loading state
-  const biblemind_Key = process.env.BIBLEMIND_API_KEY;
-  if (!biblemind_Key) {
-    throw new Error(
-      "BIBLEMIND_API_KEY is not defined in your environment variables."
-    );
-  }
+
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     const formattedDate = toDDMMYYYY(today);
@@ -34,6 +29,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const biblemind_Key = process.env.NEXT_PUBLIC_BIBLEMIND_API_KEY;
+
+    if (!biblemind_Key) {
+      throw new Error(
+        "BIBLEMIND_API_KEY is not defined in your environment variables."
+      );
+    }
     if (!selectedDate) return;
     const fetchReadings = async () => {
       setLoading(true);
