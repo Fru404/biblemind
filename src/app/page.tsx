@@ -187,7 +187,6 @@ export default function Home() {
           >
             Rosary
           </Link>
-
           <Link
             href="#"
             onClick={() => setMenuOpen(false)}
@@ -215,11 +214,17 @@ export default function Home() {
             Daily Vatican Readings & Reflections
           </p>
         </div>
-        <div>
-          <button onClick={clearCache} title="Clear Cache">
-            <FaBroom size={20} /> clear cache in case of an error
+
+        <div className="mb-4">
+          <button
+            onClick={clearCache}
+            title="Clear Cache"
+            className="flex items-center gap-2 text-[#8B0000]"
+          >
+            <FaBroom size={20} /> Clear cache in case of an error
           </button>
         </div>
+
         {/* Calendar Picker */}
         <div className="flex justify-center mb-6">
           <div className="w-64 bg-white p-4 rounded shadow-md border border-gray-200">
@@ -257,44 +262,75 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Readings Display */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <section className="bg-white rounded shadow p-4 min-h-[140px]">
-            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Readings
-            </h2>
-            {loading ? (
-              <Spinner />
-            ) : (
-              <p className="whitespace-pre-line">{readings.ot}</p>
-            )}
-          </section>
+        {/* Layout: Menu left + Content right */}
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Left Menu */}
+          <aside className="md:w-1/4">
+            <section className="bg-white rounded shadow p-4">
+              <h2 className="text-xl font-semibold text-[#8B0000] mb-4">
+                Menu
+              </h2>
+              <nav className="flex flex-col gap-2">
+                <a href="#reading" className="hover:underline text-gray-700">
+                  Reading
+                </a>
+                <a href="#gospel" className="hover:underline text-gray-700">
+                  Gospel
+                </a>
+                <a href="#pope" className="hover:underline text-gray-700">
+                  Words of Pope
+                </a>
+              </nav>
+            </section>
+          </aside>
 
-          <section className="bg-white rounded shadow p-4 min-h-[140px]">
-            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Gospel
-            </h2>
-            <AIbiblemind
-              contextText={`${readings.ot}\n\n${readings.gospel}\n\n${readings.pope}`}
-            />
+          {/* Right Content */}
+          <div className="flex flex-col gap-6 md:w-3/4">
+            <section
+              id="reading"
+              className="bg-white rounded shadow p-4 min-h-[140px]"
+            >
+              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+                Readings
+              </h2>
+              {loading ? (
+                <Spinner />
+              ) : (
+                <p className="whitespace-pre-line">{readings.ot}</p>
+              )}
+            </section>
 
-            {loading ? (
-              <Spinner />
-            ) : (
-              <p className="whitespace-pre-line">{readings.gospel}</p>
-            )}
-          </section>
+            <section
+              id="gospel"
+              className="bg-white rounded shadow p-4 min-h-[140px]"
+            >
+              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+                Gospel
+              </h2>
+              <AIbiblemind
+                contextText={`${readings.ot}\n\n${readings.gospel}\n\n${readings.pope}`}
+              />
+              {loading ? (
+                <Spinner />
+              ) : (
+                <p className="whitespace-pre-line">{readings.gospel}</p>
+              )}
+            </section>
 
-          <section className="bg-white rounded shadow p-4 min-h-[140px]">
-            <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-              Words of the pope
-            </h2>
-            {loading ? (
-              <Spinner />
-            ) : (
-              <p className="whitespace-pre-line">{readings.pope}</p>
-            )}
-          </section>
+            <section
+              id="pope"
+              className="bg-white rounded shadow p-4 min-h-[140px]"
+            >
+              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+                Words of the Pope
+              </h2>
+              {loading ? (
+                <Spinner />
+              ) : (
+                <p className="whitespace-pre-line">{readings.pope}</p>
+              )}
+            </section>
+          </div>
         </div>
       </main>
 
