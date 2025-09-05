@@ -8,7 +8,7 @@ export async function bookMark(message: { role: string; content: string }) {
     role: message.role,
     content: message.content,
     summary,
-    date: new Date().toLocaleString(),
+    date: new Date().toLocaleString("en-GB"),
   };
 
   const existing = JSON.parse(localStorage.getItem("bookmarked") || "[]");
