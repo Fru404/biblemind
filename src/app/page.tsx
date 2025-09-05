@@ -65,7 +65,7 @@ export default function Home() {
 
       try {
         const response = await fetch(
-          `https://biblemind-api-cw-gpycraft.onrender.com/sheet-data?date=${selectedDate}`,
+          `https://biblemind-api-cw-gpycraft.onrender.com/daily-readings?date=${selectedDate}`,
           {
             method: "GET",
             headers: {
@@ -277,7 +277,7 @@ export default function Home() {
                 Menu
               </h2>
               <nav className="flex flex-col gap-2">
-                {["Reading", "Gospel", "Words of Pope"].map((label, i) => (
+                {["Reading", "Gospel", "Words of the Pope"].map((label, i) => (
                   <a
                     key={i}
                     href={`#${label.toLowerCase().replace(/\s/g, "")}`}
@@ -292,7 +292,7 @@ export default function Home() {
 
           {/* Right Content */}
           <div className="flex flex-col gap-6 md:w-3/4">
-            {["reading", "gospel", "pope"].map((section) => (
+            {["reading", "gospel", "words of the pope"].map((section) => (
               <section
                 key={section}
                 id={section}
