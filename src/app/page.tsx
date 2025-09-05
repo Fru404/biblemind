@@ -220,7 +220,7 @@ export default function Home() {
         {showAskButton && askPosition && (
           <div
             style={{ top: askPosition.y, left: askPosition.x }}
-            className="absolute bg-yellow-100 text-black px-2 py-1 rounded shadow-md z-50"
+            className="absolute bg-[#8B0000] text-white px-3 py-1 rounded shadow-md z-50"
           >
             💬
           </div>
