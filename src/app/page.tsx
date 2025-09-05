@@ -149,7 +149,7 @@ export default function Home() {
           <Link href="#" className="hover:text-gray-300 transition">
             About
           </Link>
-          <Link href="/BookMark" className="hover:text-gray-300 transition">
+          <Link href="/bookmark" className="hover:text-gray-300 transition">
             BookMarks
           </Link>
           <Link href="/contact" className="hover:text-gray-300 transition">
