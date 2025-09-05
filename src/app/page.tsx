@@ -20,27 +20,35 @@ export default function Home() {
     gospel: "Loading...",
     pope: "Loading...",
   });
-  const [loading, setLoading] = useState(false); // <-- new loading state
+  const [loading, setLoading] = useState(false);
+  const [highlightedText, setHighlightedText] = useState<string | null>(null);
+  const [showAskButton, setShowAskButton] = useState(false);
+  const [askPosition, setAskPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
+  // Fetch today's date initially
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
-    const formattedDate = toDDMMYYYY(today);
-    setSelectedDate(formattedDate);
+    setSelectedDate(toDDMMYYYY(today));
   }, []);
 
+  // Fetch readings from API or cache
   useEffect(() => {
     const biblemind_Key = process.env.NEXT_PUBLIC_BIBLEMIND_API_KEY;
-
     if (!biblemind_Key) {
       throw new Error(
         "BIBLEMIND_API_KEY is not defined in your environment variables."
       );
     }
     if (!selectedDate) return;
+
     const fetchReadings = async () => {
       setLoading(true);
-      const cachedDataString = localStorage.getItem("biblemind-cache");
+
       let cache: Record<string, ReadingEntry> = {};
+      const cachedDataString = localStorage.getItem("biblemind-cache");
       if (cachedDataString) {
         try {
           cache = JSON.parse(cachedDataString);
@@ -59,27 +67,24 @@ export default function Home() {
         const response = await fetch(
           `https://biblemind-api-cw-gpycraft.onrender.com/sheet-data?date=${selectedDate}`,
           {
-            method: "GET", // explicitly specify method
+            method: "GET",
             headers: {
               "x-api-key": biblemind_Key,
-              "Content-Type": "application/json", // optional but good practice
+              "Content-Type": "application/json",
             },
             cache: "force-cache",
           }
         );
 
-        if (!response.ok) {
+        if (!response.ok)
           throw new Error(`API returned status ${response.status}`);
-        }
-
         const data = await response.json();
 
         if ("error" in data) {
-          const errorMsg = data.error || "Unknown API error";
           const errorData: ReadingEntry = {
-            ot: `Error: ${errorMsg}`,
-            gospel: `Error: ${errorMsg}`,
-            pope: `Error: ${errorMsg}`,
+            ot: `Error: ${data.error || "Unknown API error"}`,
+            gospel: `Error: ${data.error || "Unknown API error"}`,
+            pope: `Error: ${data.error || "Unknown API error"}`,
           };
           setReadings(errorData);
           cache[selectedDate] = errorData;
@@ -107,7 +112,6 @@ export default function Home() {
           pope: "Error loading Pope's reflection.",
         };
         setReadings(errorData);
-
         setLoading(false);
       }
     };
@@ -115,56 +119,75 @@ export default function Home() {
     fetchReadings();
   }, [selectedDate]);
 
-  // Simple spinner component
+  // Spinner component
   const Spinner = () => (
     <div className="flex justify-center items-center h-10">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#000000]"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#000000]" />
     </div>
   );
 
+  // Clear cache
   const clearCache = () => {
     localStorage.removeItem("biblemind-cache");
-    alert("Cache cleared! ");
+    alert("Cache cleared!");
+  };
+
+  // Highlight handler
+  const handleMouseUp = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim() !== "") {
+      const text = selection.toString();
+      setHighlightedText(text);
+
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setAskPosition({
+        x: rect.left + window.scrollX,
+        y: rect.top + window.scrollY - 30,
+      });
+      setShowAskButton(true);
+    } else {
+      setShowAskButton(false);
+    }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
+    <div
+      className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900"
+      onMouseUp={handleMouseUp}
+    >
       {/* NAVBAR */}
       <nav className="relative z-20 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md">
         <button onClick={() => setMenuOpen(true)} className="md:hidden z-30">
           <FaBars size={24} />
         </button>
-
         <div className="absolute left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold tracking-wide">
           biblemind
         </div>
-
         <div className="hidden md:flex gap-6 ml-auto">
-          <Link href="#" className="hover:text-gray-300 transition">
-            Home
-          </Link>
-          <Link href="/devotions" className="hover:text-gray-300 transition">
-            Rosary
-          </Link>
-          <Link href="#" className="hover:text-gray-300 transition">
-            About
-          </Link>
-          <Link href="/bookmark" className="hover:text-gray-300 transition">
-            Bookmarks
-          </Link>
-          <Link href="/contact" className="hover:text-gray-300 transition">
-            Contact
-          </Link>
+          {["Home", "Devotions", "About", "Bookmark", "Contact"].map(
+            (label, i) => (
+              <Link
+                key={i}
+                href={`/${label.toLowerCase()}`}
+                className="hover:text-gray-300 transition"
+              >
+                {label}
+              </Link>
+            )
+          )}
         </div>
       </nav>
 
+      {/* Mobile menu overlay */}
       {menuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-40 z-10"
           onClick={() => setMenuOpen(false)}
-        ></div>
+        />
       )}
 
+      {/* Mobile menu */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-[#8B0000] text-white z-20 transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
@@ -176,46 +199,34 @@ export default function Home() {
           </button>
         </div>
         <nav className="flex flex-col gap-4 px-6 py-2 text-lg">
-          <Link
-            href="#"
-            onClick={() => setMenuOpen(false)}
-            className="hover:text-gray-300"
-          >
-            Home
-          </Link>
-          <Link
-            href="/devotions"
-            onClick={() => setMenuOpen(false)}
-            className="hover:text-gray-300"
-          >
-            Rosary
-          </Link>
-          <Link
-            href="#"
-            onClick={() => setMenuOpen(false)}
-            className="hover:text-gray-300"
-          >
-            About
-          </Link>
-          <Link
-            href="/bookmark"
-            onClick={() => setMenuOpen(false)}
-            className="hover:text-gray-300"
-          >
-            Bookmarks
-          </Link>
-          <Link
-            href="/contact"
-            onClick={() => setMenuOpen(false)}
-            className="hover:text-gray-300"
-          >
-            Contact
-          </Link>
+          {["Home", "devotions", "About", "Bookmark", "Contact"].map(
+            (label, i) => (
+              <Link
+                key={i}
+                href={`/${label.toLowerCase()}`}
+                className="hover:text-gray-300"
+                onClick={() => setMenuOpen(false)}
+              >
+                {label}
+              </Link>
+            )
+          )}
         </nav>
       </div>
 
       {/* MAIN SECTION */}
-      <main className="flex-grow px-4 py-6 md:px-12">
+      <main className="flex-grow px-4 py-6 md:px-12 relative">
+        {/* Ask AI button */}
+        {showAskButton && askPosition && (
+          <div
+            style={{ top: askPosition.y, left: askPosition.x }}
+            className="absolute bg-yellow-100 text-black px-2 py-1 rounded shadow-md z-50"
+          >
+            💬
+          </div>
+        )}
+
+        {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-[#8B0000]">
             Daily scripture reading
@@ -225,6 +236,7 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Clear cache button */}
         <div className="mb-4">
           <button
             onClick={clearCache}
@@ -244,29 +256,13 @@ export default function Home() {
             >
               Date
             </label>
-
             <input
               id="date-picker"
               type="date"
               value={
-                selectedDate
-                  ? (() => {
-                      const parts = selectedDate.split("-");
-                      return parts.length === 3
-                        ? `${parts[2]}-${parts[1]}-${parts[0]}`
-                        : "";
-                    })()
-                  : ""
+                selectedDate ? selectedDate.split("-").reverse().join("-") : ""
               }
-              onChange={(e) => {
-                const isoDate = e.target.value;
-                if (isoDate) {
-                  const formatted = toDDMMYYYY(isoDate);
-                  setSelectedDate(formatted);
-                } else {
-                  setSelectedDate("");
-                }
-              }}
+              onChange={(e) => setSelectedDate(toDDMMYYYY(e.target.value))}
               className="w-full border border-gray-300 rounded px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
             />
           </div>
@@ -281,65 +277,53 @@ export default function Home() {
                 Menu
               </h2>
               <nav className="flex flex-col gap-2">
-                <a href="#reading" className="hover:underline text-gray-700">
-                  Reading
-                </a>
-                <a href="#gospel" className="hover:underline text-gray-700">
-                  Gospel
-                </a>
-                <a href="#pope" className="hover:underline text-gray-700">
-                  Words of Pope
-                </a>
+                {["Reading", "Gospel", "Words of Pope"].map((label, i) => (
+                  <a
+                    key={i}
+                    href={`#${label.toLowerCase().replace(/\s/g, "")}`}
+                    className="hover:underline text-gray-700"
+                  >
+                    {label}
+                  </a>
+                ))}
               </nav>
             </section>
           </aside>
 
           {/* Right Content */}
           <div className="flex flex-col gap-6 md:w-3/4">
-            <section
-              id="reading"
-              className="bg-white rounded shadow p-4 min-h-[140px]"
-            >
-              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-                Readings
-              </h2>
-              {loading ? (
-                <Spinner />
-              ) : (
-                <p className="whitespace-pre-line">{readings.ot}</p>
-              )}
-            </section>
-
-            <section
-              id="gospel"
-              className="bg-white rounded shadow p-4 min-h-[140px]"
-            >
-              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-                Gospel
-              </h2>
-              <AIbiblemind
-                contextText={`${readings.ot}\n\n${readings.gospel}\n\n${readings.pope}`}
-              />
-              {loading ? (
-                <Spinner />
-              ) : (
-                <p className="whitespace-pre-line">{readings.gospel}</p>
-              )}
-            </section>
-
-            <section
-              id="pope"
-              className="bg-white rounded shadow p-4 min-h-[140px]"
-            >
-              <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
-                Words of the Pope
-              </h2>
-              {loading ? (
-                <Spinner />
-              ) : (
-                <p className="whitespace-pre-line">{readings.pope}</p>
-              )}
-            </section>
+            {["reading", "gospel", "pope"].map((section) => (
+              <section
+                key={section}
+                id={section}
+                className="bg-white rounded shadow p-4 min-h-[140px]"
+              >
+                <h2 className="text-xl font-semibold text-[#8B0000] mb-2">
+                  {section === "reading"
+                    ? "Readings"
+                    : section === "gospel"
+                    ? "Gospel"
+                    : "Words of the Pope"}
+                </h2>
+                {loading ? (
+                  <Spinner />
+                ) : (
+                  <p className="whitespace-pre-line">
+                    {section === "reading"
+                      ? readings.ot
+                      : section === "gospel"
+                      ? readings.gospel
+                      : readings.pope}
+                  </p>
+                )}
+                {section === "gospel" && (
+                  <AIbiblemind
+                    contextText={`${readings.ot}\n\n${readings.gospel}\n\n${readings.pope}`}
+                    highlight={highlightedText}
+                  />
+                )}
+              </section>
+            ))}
           </div>
         </div>
       </main>

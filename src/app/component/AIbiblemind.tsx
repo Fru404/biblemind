@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState, KeyboardEvent, useEffect } from "react";
 import {
   FaTimes,
   FaMinus,
@@ -10,7 +10,15 @@ import {
 } from "react-icons/fa";
 import { bookMark } from "../utils/bookmark";
 
-const AIbiblemind = ({ contextText }: { contextText?: string }) => {
+interface AIbiblemindProps {
+  contextText?: string;
+  highlight?: string | null; // <-- added this prop
+}
+
+const AIbiblemind: React.FC<AIbiblemindProps> = ({
+  contextText,
+  highlight,
+}) => {
   const [open, setOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -19,6 +27,15 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+
+  // If `highlight` changes, automatically populate input
+  useEffect(() => {
+    if (highlight) {
+      setInput(highlight);
+      setOpen(true);
+      setMinimized(false);
+    }
+  }, [highlight]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -43,6 +60,8 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
       console.error("AI error:", err);
+      setNotification("AI request failed ❌");
+      setTimeout(() => setNotification(null), 2000);
     }
 
     setLoading(false);
@@ -55,9 +74,7 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
     }
   };
 
-  const clearChat = () => {
-    setMessages([]);
-  };
+  const clearChat = () => setMessages([]);
 
   const handleBookmark = async () => {
     if (messages.length === 0) return;
@@ -65,29 +82,25 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
 
     try {
       await bookMark(lastMessage);
-      setNotification("bookmarked! ✅");
+      setNotification("Bookmarked! ✅");
     } catch (err) {
       console.error(err);
       setNotification("Failed to bookmark ❌");
     }
 
-    // Auto-hide after 2s
     setTimeout(() => setNotification(null), 2000);
   };
 
   return (
     <div>
       {/* NOTIFICATION */}
-      {/* NOTIFICATION */}
       {notification && (
-        <div
-          className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm 
-               transition-opacity duration-500 opacity-100 z-50"
-        >
+        <div className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
           {notification}
         </div>
       )}
 
+      {/* OPEN BUTTON */}
       {!open && (
         <button
           className="fixed bottom-4 right-4 bg-[#8b1817] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2"
@@ -100,6 +113,7 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
         </button>
       )}
 
+      {/* AI PANEL */}
       {open && (
         <div className="fixed bottom-4 right-4 w-80 bg-white border rounded shadow-lg flex flex-col">
           {/* HEADER */}
@@ -161,6 +175,7 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
                   onKeyDown={handleKeyDown}
                   placeholder="Ask about today's readings..."
                 />
+
                 <button
                   className="bg-[#8B0000] text-white px-2 rounded flex items-center justify-center"
                   onClick={sendMessage}
