@@ -18,6 +18,7 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
   );
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -61,11 +62,22 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
   const handleBookmark = async () => {
     if (messages.length === 0) return;
     const lastMessage = messages[messages.length - 1];
-    await bookMark(lastMessage); // now also stores AI-generated summary
+    await bookMark(lastMessage);
+
+    // Show notification
+    setNotification("Message bookmarked!");
+    setTimeout(() => setNotification(null), 2000); // Hide after 2s
   };
 
   return (
     <div>
+      {/* NOTIFICATION */}
+      {notification && (
+        <div className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm animate-fade-in-out">
+          {notification}
+        </div>
+      )}
+
       {!open && (
         <button
           className="fixed bottom-4 right-4 bg-[#8b1817] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2"
