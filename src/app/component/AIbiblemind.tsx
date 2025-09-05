@@ -6,7 +6,9 @@ import {
   FaCommentDots,
   FaPaperPlane,
   FaTrash,
+  FaBookmark,
 } from "react-icons/fa";
+import { bookMark } from "../utils/bookmark";
 
 const AIbiblemind = ({ contextText }: { contextText?: string }) => {
   const [open, setOpen] = useState(false);
@@ -54,6 +56,12 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
 
   const clearChat = () => {
     setMessages([]);
+  };
+
+  const handleBookmark = () => {
+    if (messages.length === 0) return;
+    const lastMessage = messages[messages.length - 1]; // bookmark the last message
+    bookMark(lastMessage);
   };
 
   return (
@@ -115,6 +123,15 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
 
               {/* INPUT */}
               <div className="p-2 flex gap-2 border-t">
+                <button
+                  className="bg-[#8B0000] text-white px-2 rounded flex items-center justify-center"
+                  onClick={handleBookmark}
+                  disabled={loading}
+                  title="Bookmark last message"
+                >
+                  <FaBookmark />
+                </button>
+
                 <input
                   className="flex-1 border rounded px-2 py-1 text-sm"
                   value={input}

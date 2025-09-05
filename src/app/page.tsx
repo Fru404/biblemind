@@ -149,6 +149,9 @@ export default function Home() {
           <Link href="#" className="hover:text-gray-300 transition">
             About
           </Link>
+          <Link href="/BookMark" className="hover:text-gray-300 transition">
+            BookMarks
+          </Link>
           <Link href="/contact" className="hover:text-gray-300 transition">
             Contact
           </Link>
@@ -200,6 +203,13 @@ export default function Home() {
             className="hover:text-gray-300"
           >
             Contact
+          </Link>
+          <Link
+            href="/bookmark"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-gray-300"
+          >
+            BookMarks
           </Link>
         </nav>
       </div>
