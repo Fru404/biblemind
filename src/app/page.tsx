@@ -198,18 +198,18 @@ export default function Home() {
             About
           </Link>
           <Link
-            href="/contact"
-            onClick={() => setMenuOpen(false)}
-            className="hover:text-gray-300"
-          >
-            Contact
-          </Link>
-          <Link
             href="/bookmark"
             onClick={() => setMenuOpen(false)}
             className="hover:text-gray-300"
           >
             BookMarks
+          </Link>
+          <Link
+            href="/contact"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-gray-300"
+          >
+            Contact
           </Link>
         </nav>
       </div>

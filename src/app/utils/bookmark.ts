@@ -1,8 +1,6 @@
-// utils/bookmark.ts
-import { nanoid } from "nanoid"; // npm i nanoid
+import { nanoid } from "nanoid";
 
 export async function bookMark(message: { role: string; content: string }) {
-  // call your AI summarizer (Gemini, OpenAI, etc.)
   const summary = await generateSummary(message.content);
 
   const newBookmark = {
@@ -18,9 +16,20 @@ export async function bookMark(message: { role: string; content: string }) {
   localStorage.setItem("bookmarked", JSON.stringify(existing));
 }
 
-// Fake placeholder – replace with Gemini API call
 async function generateSummary(content: string): Promise<string> {
-  // Example: call Gemini API here
-  // For now just shorten content
+  try {
+    const res = await fetch("/api/bookmark-title", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    });
+
+    const data = await res.json();
+    if (data.summary) return data.summary.trim();
+  } catch (err) {
+    console.error("Summary generation failed:", err);
+  }
+
+  // fallback
   return content.length > 40 ? content.slice(0, 40) + "..." : content;
 }

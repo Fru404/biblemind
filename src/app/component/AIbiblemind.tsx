@@ -58,10 +58,10 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
     setMessages([]);
   };
 
-  const handleBookmark = () => {
+  const handleBookmark = async () => {
     if (messages.length === 0) return;
-    const lastMessage = messages[messages.length - 1]; // bookmark the last message
-    bookMark(lastMessage);
+    const lastMessage = messages[messages.length - 1];
+    await bookMark(lastMessage); // now also stores AI-generated summary
   };
 
   return (
