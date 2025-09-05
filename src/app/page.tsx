@@ -150,7 +150,7 @@ export default function Home() {
             About
           </Link>
           <Link href="/bookmark" className="hover:text-gray-300 transition">
-            BookMarks
+            Bookmarks
           </Link>
           <Link href="/contact" className="hover:text-gray-300 transition">
             Contact
@@ -202,7 +202,7 @@ export default function Home() {
             onClick={() => setMenuOpen(false)}
             className="hover:text-gray-300"
           >
-            BookMarks
+            Bookmarks
           </Link>
           <Link
             href="/contact"

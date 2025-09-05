@@ -62,18 +62,28 @@ const AIbiblemind = ({ contextText }: { contextText?: string }) => {
   const handleBookmark = async () => {
     if (messages.length === 0) return;
     const lastMessage = messages[messages.length - 1];
-    await bookMark(lastMessage);
 
-    // Show notification
-    setNotification("Message bookmarked!");
-    setTimeout(() => setNotification(null), 2000); // Hide after 2s
+    try {
+      await bookMark(lastMessage);
+      setNotification("bookmarked! ✅");
+    } catch (err) {
+      console.error(err);
+      setNotification("Failed to bookmark ❌");
+    }
+
+    // Auto-hide after 2s
+    setTimeout(() => setNotification(null), 2000);
   };
 
   return (
     <div>
       {/* NOTIFICATION */}
+      {/* NOTIFICATION */}
       {notification && (
-        <div className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm animate-fade-in-out">
+        <div
+          className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm 
+               transition-opacity duration-500 opacity-100 z-50"
+        >
           {notification}
         </div>
       )}
