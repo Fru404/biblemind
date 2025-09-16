@@ -165,17 +165,15 @@ export default function Home() {
           biblemind
         </div>
         <div className="hidden md:flex gap-6 ml-auto">
-          {["Home", "Devotions", "About", "Bookmark", "Contact"].map(
-            (label, i) => (
-              <Link
-                key={i}
-                href={`/${label.toLowerCase()}`}
-                className="hover:text-gray-300 transition"
-              >
-                {label}
-              </Link>
-            )
-          )}
+          {["Devotions", "About", "Bookmark", "Contact"].map((label, i) => (
+            <Link
+              key={i}
+              href={`/${label.toLowerCase()}`}
+              className="hover:text-gray-300 transition"
+            >
+              {label}
+            </Link>
+          ))}
         </div>
       </nav>
 
@@ -199,18 +197,16 @@ export default function Home() {
           </button>
         </div>
         <nav className="flex flex-col gap-4 px-6 py-2 text-lg">
-          {["Home", "devotions", "About", "Bookmark", "Contact"].map(
-            (label, i) => (
-              <Link
-                key={i}
-                href={`/${label.toLowerCase()}`}
-                className="hover:text-gray-300"
-                onClick={() => setMenuOpen(false)}
-              >
-                {label}
-              </Link>
-            )
-          )}
+          {["Devotions", "About", "Bookmark", "Contact"].map((label, i) => (
+            <Link
+              key={i}
+              href={`/${label.toLowerCase()}`}
+              className="hover:text-gray-300"
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
         </nav>
       </div>
 
