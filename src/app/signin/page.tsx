@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 export default function SignIn() {
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<any | null>(null); // result can be any JSON
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,8 +22,8 @@ export default function SignIn() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            apiKey: "LvOSXg63vQNP5ghmcJ-pAqEMaET1ZuyrtG02Wcj9", // safe to expose public key
-            serviceName: "biblemind.com", // or dynamically detect your site
+            apiKey: "LvOSXg63vQNP5ghmcJ-pAqEMaET1ZuyrtG02Wcj9",
+            serviceName: "biblemind.com",
           }),
         }
       );
@@ -31,9 +31,13 @@ export default function SignIn() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setResult(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError("Registration failed. Check console for details.");
+      if (err instanceof Error) {
+        setError(`Registration failed: ${err.message}`);
+      } else {
+        setError("Registration failed. Unknown error.");
+      }
     } finally {
       setLoading(false);
     }
