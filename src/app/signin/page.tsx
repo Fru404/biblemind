@@ -2,8 +2,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
+// Type for the response data
+type RegisterResponse = Record<string, unknown>;
+
 export default function SignIn() {
-  const [result, setResult] = useState<any | null>(null); // result can be any JSON
+  const [result, setResult] = useState<RegisterResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +32,7 @@ export default function SignIn() {
       );
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      const data: RegisterResponse = await res.json();
       setResult(data);
     } catch (err: unknown) {
       console.error(err);
