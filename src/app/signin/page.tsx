@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 export default function SignIn() {
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
