@@ -26,7 +26,7 @@ export default function SignIn() {
           },
           body: JSON.stringify({
             apiKey: "LvOSXg63vQNP5ghmcJ-pAqEMaET1ZuyrtG02Wcj9",
-            serviceName: "biblemind.com",
+            serviceName: "biblemind.onrender.com",
           }),
         }
       );
