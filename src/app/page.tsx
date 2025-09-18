@@ -4,6 +4,9 @@ import { FaBars, FaTimes, FaBroom } from "react-icons/fa";
 import Link from "next/link";
 import { toDDMMYYYY } from "@/src/app/utils/dd-mm-yyyy";
 import AIbiblemind from "./component/AIbiblemind";
+import biblemind from "@/public/biblemind.png";
+import Image from "next/image";
+import { FaChevronUp } from "react-icons/fa";
 
 interface ReadingEntry {
   date?: string;
@@ -33,6 +36,19 @@ export default function Home() {
     const today = new Date().toISOString().split("T")[0];
     setSelectedDate(toDDMMYYYY(today));
   }, []);
+  const [showTopBtn, setShowTopBtn] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowTopBtn(window.scrollY > 200); // show after 200px scroll
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Fetch readings from API or cache
   useEffect(() => {
@@ -329,9 +345,47 @@ export default function Home() {
       </main>
 
       {/* FOOTER */}
-      <footer className="p-4 text-center text-sm text-gray-600">
-        BibleMind. All rights reserved.
+      <footer className="bg-[#8B0000] text-white p-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <Image
+                src={biblemind}
+                alt="share"
+                style={{ cursor: "pointer" }}
+                className="h-25 w-25 rounded"
+              />
+            </Link>
+          </div>
+          {/* Links on right */}
+          <div className="flex gap-6 text-sm">
+            <Link href="/bookmark" className="hover:underline">
+              Bookmark
+            </Link>
+            <Link href="/signin" className="hover:underline">
+              Signin
+            </Link>
+            <Link href="/contact" className="hover:underline">
+              Contact
+            </Link>
+          </div>
+        </div>
+        <div className="text-center text-xs mt-4 opacity-80">
+          © {new Date().getFullYear()} BibleMind. All rights reserved.
+        </div>
       </footer>
+      {showTopBtn && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-50
+               bg-[#8B0000] text-white rounded-full
+               w-10 h-10 flex items-center justify-center
+               shadow-lg hover:bg-red-700 transition"
+          aria-label="Back to top"
+        >
+          <FaChevronUp />
+        </button>
+      )}
     </div>
   );
 }
