@@ -342,19 +342,20 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </main>
-      {showTopBtn && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-6 left-6 z-50
+        {showTopBtn && (
+          <button
+            onClick={scrollToTop}
+            className="fixed bottom-6 left-6 z-50
                bg-[#8B0000] text-white rounded-full
                w-10 h-10 flex items-center justify-center
                shadow-lg hover:bg-red-700 transition"
-          aria-label="Back to top"
-        >
-          <FaChevronUp />
-        </button>
-      )}
+            aria-label="Back to top"
+          >
+            <FaChevronUp />
+          </button>
+        )}
+      </main>
+
       {/* FOOTER */}
       <footer className="bg-[#8B0000] text-white p-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:justify-between gap-4">
