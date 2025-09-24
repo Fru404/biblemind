@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { FaUser, FaEnvelope, FaKey, FaGoogle } from "react-icons/fa"; // ⬅ icons
 
-// Type for the response data
 type RegisterResponse = Record<string, unknown>;
 
 export default function SignIn() {
@@ -21,9 +21,7 @@ export default function SignIn() {
         "https://pauthtato-client-c2c.onrender.com/register",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             apiKey: "LvOSXg63vQNP5ghmcJ-pAqEMaET1ZuyrtG02Wcj9",
             serviceName: "biblemind.onrender.com",
@@ -34,13 +32,12 @@ export default function SignIn() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: RegisterResponse = await res.json();
       setResult(data);
-    } catch (err: unknown) {
-      console.error(err);
-      if (err instanceof Error) {
-        setError(`Registration failed: ${err.message}`);
-      } else {
-        setError("Registration failed. Unknown error.");
-      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? `Registration failed: ${err.message}`
+          : "Registration failed. Unknown error."
+      );
     } finally {
       setLoading(false);
     }
@@ -55,25 +52,75 @@ export default function SignIn() {
         </Link>
       </nav>
 
-      {/* MAIN CONTENT */}
-      <main className="flex-1 flex flex-col items-center justify-center p-6">
-        <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-md border border-gray-200">
-          <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
+      {/* MAIN */}
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-md border border-gray-200 p-8">
+          <h2 className="text-2xl font-bold text-center mb-8">Sign In</h2>
 
-          <form onSubmit={handleRegister} className="flex flex-col gap-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition disabled:opacity-50"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* LEFT – Name & Email login */}
+            <form
+              onSubmit={handleRegister}
+              className="flex flex-col gap-4 justify-center"
             >
-              {loading ? "Creating…" : "Pauthtato"}
-            </button>
-          </form>
+              <div className="relative">
+                <FaUser className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className="pl-10 border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-red-600"
+                  required
+                />
+              </div>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="pl-10 border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-red-600"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex items-center justify-center gap-2 bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition disabled:opacity-50"
+              >
+                {loading ? "Logging in…" : "Login"}
+              </button>
+            </form>
 
-          {error && <p className="mt-4 text-red-600 text-center">{error}</p>}
+            {/* RIGHT – Other sign-in methods */}
+            <div className="flex flex-col justify-center gap-6">
+              <button
+                type="button"
+                className="flex items-center justify-center gap-2 w-full bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition"
+              >
+                Pauthtato (beta)
+              </button>
 
+              <div className="flex items-center">
+                <hr className="flex-grow border-gray-300" />
+                <span className="mx-3 text-gray-500 text-sm">OR</span>
+                <hr className="flex-grow border-gray-300" />
+              </div>
+
+              <button
+                type="button"
+                className="flex items-center justify-center gap-2 w-full border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-100 transition"
+              >
+                <FaGoogle className="text-red-600" />
+                Google
+              </button>
+            </div>
+          </div>
+
+          {/* Error / Result */}
+          {error && (
+            <p className="mt-6 text-red-600 text-center text-sm">{error}</p>
+          )}
           {result && (
-            <div className="mt-6 text-sm break-all bg-gray-50 p-4 rounded">
+            <div className="mt-6 text-xs break-all bg-gray-50 p-3 rounded border">
               <pre>{JSON.stringify(result, null, 2)}</pre>
             </div>
           )}
