@@ -45,23 +45,28 @@ export async function bookMark(
   // Add the new bookmark to cache
   existingBookmarks.push(newBookmark);
   localStorage.setItem("bookmarked", JSON.stringify(existingBookmarks));
+  console.log("Bookmark saved to cache:", newBookmark);
 
+  if (!email) return;
   // Insert all cached bookmarks into Supabase only if email exists
-  if (email) {
-    const { error } = await supabase.from("bookmark_table").insert(
-      existingBookmarks.map((b) => ({
-        name,
-        email,
-        bookmark: b,
-      }))
-    );
+  console.log("Inserting bookmarks to Supabase for:", email);
+    const { error } = await supabase.from("bookmark_table").insert([
+  {
+    name,
+    email,
+    bookmark: message.content,
+    summary: summary,
+    date: new Date().toLocaleString("en-GB"),
+  },
+]);
+
 
     if (error) {
       console.error("Error saving bookmarks to Supabase:", error);
     } else {
       console.log("Bookmarks inserted successfully!");
     }
-  }
+  
 }
 
 // Helper function to generate a summary
