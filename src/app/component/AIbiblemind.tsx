@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, KeyboardEvent, useEffect } from "react";
 import {
   FaTimes,
@@ -8,17 +9,19 @@ import {
   FaTrash,
   FaBookmark,
 } from "react-icons/fa";
-import { bookMark } from "../utils/bookmark";
+import { bookMark, countBookmarks } from "../utils/bookmark";
+import { useSession } from "next-auth/react";
 
 interface AIbiblemindProps {
   contextText?: string;
-  highlight?: string | null; // <-- added this prop
+  highlight?: string | null;
 }
 
 const AIbiblemind: React.FC<AIbiblemindProps> = ({
   contextText,
   highlight,
 }) => {
+  const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -28,7 +31,6 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
 
-  // If `highlight` changes, automatically populate input
   useEffect(() => {
     if (highlight) {
       setInput(highlight);
@@ -54,7 +56,6 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
           context: contextText,
         }),
       });
-
       const data = await res.json();
       const assistantMessage = { role: "assistant", content: data.reply };
       setMessages((prev) => [...prev, assistantMessage]);
@@ -78,10 +79,27 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
 
   const handleBookmark = async () => {
     if (messages.length === 0) return;
+    /*
+    const bookmarkCount = countBookmarks();
+    const MAX_BOOKMARKS = 10; // optional limit for display, can remove if unlimited
+
+    if (bookmarkCount >= MAX_BOOKMARKS) {
+      setNotification(
+        `You have reached the maximum of ${MAX_BOOKMARKS} bookmarks. `
+      );
+      setTimeout(() => setNotification(null), 3000);
+      return;
+    }*/
+
     const lastMessage = messages[messages.length - 1];
 
     try {
-      await bookMark(lastMessage);
+      // Save bookmark. If user is signed in, pass name/email; else null
+      await bookMark(
+        lastMessage,
+        session?.user?.name || "Anonymous",
+        session?.user?.email ?? "anonymous@user.biblemind.onrender.com"
+      );
       setNotification("Bookmarked! ✅");
     } catch (err) {
       console.error(err);
@@ -91,16 +109,22 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
     setTimeout(() => setNotification(null), 2000);
   };
 
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading AI…
+      </div>
+    );
+  }
+
   return (
     <div>
-      {/* NOTIFICATION */}
       {notification && (
         <div className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
           {notification}
         </div>
       )}
 
-      {/* OPEN BUTTON */}
       {!open && (
         <button
           className="fixed bottom-4 right-4 bg-[#8b1817] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2"
@@ -113,7 +137,6 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
         </button>
       )}
 
-      {/* AI PANEL */}
       {open && (
         <div className="fixed bottom-4 right-4 w-80 bg-white border rounded shadow-lg flex flex-col">
           {/* HEADER */}
