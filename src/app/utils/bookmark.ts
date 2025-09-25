@@ -2,17 +2,25 @@
 import { nanoid } from "nanoid";
 import { createClient } from "@supabase/supabase-js";
 
+interface Message {
+  role: string;
+  content: string;
+}
+
+interface Bookmark {
+  id: string;
+  role: string;
+  content: string;
+  summary: string;
+  date: string;
+}
+
 // Pass name and email as arguments from your component
 export async function bookMark(
-  message: { role: string; content: string },
+  message: Message,
   name: string,
-  email: string
+  email: string | null
 ) {
-  if (!email) {
-    console.error("No email provided. Bookmark not saved.");
-    return;
-  }
-
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_KEY!
@@ -21,7 +29,7 @@ export async function bookMark(
   // Generate summary for the new bookmark
   const summary = await generateSummary(message.content);
 
-  const newBookmark = {
+  const newBookmark: Bookmark = {
     id: nanoid(),
     role: message.role,
     content: message.content,
@@ -30,7 +38,7 @@ export async function bookMark(
   };
 
   // Retrieve cached bookmarks from localStorage
-  const existingBookmarks: any[] = JSON.parse(
+  const existingBookmarks: Bookmark[] = JSON.parse(
     localStorage.getItem("bookmarked") || "[]"
   );
 
@@ -38,19 +46,21 @@ export async function bookMark(
   existingBookmarks.push(newBookmark);
   localStorage.setItem("bookmarked", JSON.stringify(existingBookmarks));
 
-  // Insert all cached bookmarks into Supabase
-  const { error } = await supabase.from("bookmark_table").insert(
-    existingBookmarks.map((b) => ({
-      name,
-      email,
-      bookmark: b,
-    }))
-  );
+  // Insert all cached bookmarks into Supabase only if email exists
+  if (email) {
+    const { error } = await supabase.from("bookmark_table").insert(
+      existingBookmarks.map((b) => ({
+        name,
+        email,
+        bookmark: b,
+      }))
+    );
 
-  if (error) {
-    console.error("Error saving bookmarks to Supabase:", error);
-  } else {
-    console.log("Bookmarks inserted successfully!");
+    if (error) {
+      console.error("Error saving bookmarks to Supabase:", error);
+    } else {
+      console.log("Bookmarks inserted successfully!");
+    }
   }
 }
 
@@ -62,6 +72,7 @@ async function generateSummary(content: string): Promise<string> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
     });
+
     const data = await res.json();
     if (data.summary) return data.summary.trim();
   } catch (err) {
@@ -69,13 +80,14 @@ async function generateSummary(content: string): Promise<string> {
   }
 
   // fallback
-  return content.length > 40 ? content.slice(0, 40) + "..." : content;
+  return content.length > 40 ? `${content.slice(0, 40)}...` : content;
 }
 
-// utils/bookmark.ts
+// Count bookmarks from localStorage
 export function countBookmarks(): number {
   const cached = localStorage.getItem("bookmarked");
   if (!cached) return 0;
+
   try {
     const bookmarks = JSON.parse(cached);
     return Array.isArray(bookmarks) ? bookmarks.length : 0;
