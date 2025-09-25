@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     const prompt = `
 Summarize the following chat message into a short, clear title (max 10 words).
-Focus on the main theme or idea.
+Focus on the main theme or idea. Include the rading chapter and verses
 
 Message:
 ${content}

@@ -7,6 +7,7 @@ import AIbiblemind from "./component/AIbiblemind";
 import biblemind from "@/public/biblemind.png";
 import Image from "next/image";
 import { FaChevronUp } from "react-icons/fa";
+import { useSession, signOut } from "next-auth/react";
 
 interface ReadingEntry {
   date?: string;
@@ -342,6 +343,7 @@ export default function Home() {
             ))}
           </div>
         </div>
+        {/*
         {showTopBtn && (
           <button
             onClick={scrollToTop}
@@ -353,7 +355,7 @@ export default function Home() {
           >
             <FaChevronUp />
           </button>
-        )}
+        )}*/}
       </main>
 
       {/* FOOTER */}

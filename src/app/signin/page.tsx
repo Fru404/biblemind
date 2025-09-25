@@ -1,14 +1,27 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaUser, FaEnvelope, FaKey, FaGoogle } from "react-icons/fa"; // ⬅ icons
+import { useRouter } from "next/navigation";
+import { FaUser, FaEnvelope, FaKey, FaGoogle } from "react-icons/fa";
+import { signIn, useSession } from "next-auth/react";
 
 type RegisterResponse = Record<string, unknown>;
 
 export default function SignIn() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [result, setResult] = useState<RegisterResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect to profile if already signed in
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/profile");
+    }
+  }, [status, router]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +45,9 @@ export default function SignIn() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: RegisterResponse = await res.json();
       setResult(data);
+
+      // Redirect to profile after successful login
+      router.push("/profile");
     } catch (err) {
       setError(
         err instanceof Error
@@ -86,6 +102,7 @@ export default function SignIn() {
                 disabled={loading}
                 className="flex items-center justify-center gap-2 bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition disabled:opacity-50"
               >
+                <FaKey />
                 {loading ? "Logging in…" : "Login"}
               </button>
             </form>
@@ -94,9 +111,10 @@ export default function SignIn() {
             <div className="flex flex-col justify-center gap-6">
               <button
                 type="button"
-                className="flex items-center justify-center gap-2 w-full bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition"
+                className="cursor-pointer flex items-center justify-center gap-2 w-full bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition"
+                onClick={() => alert("Pauthtato login API call here")}
               >
-                Pauthtato (beta)
+                Pauthtato (Beta)
               </button>
 
               <div className="flex items-center">
@@ -106,11 +124,11 @@ export default function SignIn() {
               </div>
 
               <button
-                type="button"
-                className="flex items-center justify-center gap-2 w-full border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-100 transition"
+                onClick={() => signIn("google", { callbackUrl: "/profile" })}
+                className="cursor-pointer flex items-center justify-center gap-2 w-full border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-100 transition"
               >
                 <FaGoogle className="text-red-600" />
-                Google
+                Sign in with Google
               </button>
             </div>
           </div>
