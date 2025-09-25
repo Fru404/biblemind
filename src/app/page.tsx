@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FaBars, FaTimes, FaBroom } from "react-icons/fa";
+import { FaCross } from "react-icons/fa6";
 import Link from "next/link";
 import { toDDMMYYYY } from "@/src/app/utils/dd-mm-yyyy";
 import AIbiblemind from "./component/AIbiblemind";
 import biblemind from "@/public/biblemind.png";
 import Image from "next/image";
 import { FaChevronUp } from "react-icons/fa";
-import { useSession, signOut } from "next-auth/react";
+
+import { useSession } from "next-auth/react";
 
 interface ReadingEntry {
   date?: string;
@@ -24,6 +26,7 @@ export default function Home() {
     gospel: "Loading...",
     pope: "Loading...",
   });
+  const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [highlightedText, setHighlightedText] = useState<string | null>(null);
   const [showAskButton, setShowAskButton] = useState(false);
@@ -175,23 +178,38 @@ export default function Home() {
     >
       {/* NAVBAR */}
       <nav className="relative z-20 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md">
+        {/* Mobile burger */}
         <button onClick={() => setMenuOpen(true)} className="md:hidden z-30">
           <FaBars size={24} />
         </button>
+
+        {/* Center brand */}
         <div className="absolute left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold tracking-wide">
           biblemind
         </div>
-        <div className="hidden md:flex gap-6 ml-auto">
+
+        {/* Desktop links + Profile icon */}
+        <div className="hidden md:flex items-center gap-6 ml-auto">
           {["Devotions", "About", "Bookmark", "Contact", "Signin"].map(
-            (label, i) => (
+            (label) => (
               <Link
-                key={i}
+                key={label}
                 href={`/${label.toLowerCase()}`}
                 className="hover:text-gray-300 transition"
               >
                 {label}
               </Link>
             )
+          )}
+          {/* ✨ Religious profile icon only when logged in */}
+          {session && (
+            <Link
+              href="/profile"
+              className="hover:text-gray-300 transition"
+              title="Profile"
+            >
+              Profile
+            </Link>
           )}
         </div>
       </nav>
