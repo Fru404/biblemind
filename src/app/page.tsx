@@ -246,6 +246,15 @@ export default function Home() {
               </Link>
             )
           )}
+          {session && (
+            <Link
+              href="/profile"
+              className="hover:text-gray-300 transition"
+              title="Profile"
+            >
+              Profile
+            </Link>
+          )}
         </nav>
       </div>
 
