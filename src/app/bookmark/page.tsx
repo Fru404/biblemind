@@ -1,6 +1,8 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface Bookmark {
   id: string;
@@ -12,6 +14,7 @@ interface Bookmark {
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const { data: session } = useSession(); // fetch session info
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("bookmarked") || "[]");
@@ -22,7 +25,7 @@ export default function BookmarksPage() {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this bookmark?"
     );
-    if (!confirmDelete) return; // Cancel clicked → do nothing
+    if (!confirmDelete) return;
 
     const updated = bookmarks.filter((bm) => bm.id !== id);
     setBookmarks(updated);
@@ -41,6 +44,19 @@ export default function BookmarksPage() {
       {/* MAIN CONTENT */}
       <main className="flex-1 flex flex-col items-center justify-start p-6 w-full max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">Bookmarked Reflections</h1>
+
+        {!session && (
+          <p className="p-4 text-center text-sm text-gray-600 border-t">
+            Sign in to sync bookmarks across devices.{" "}
+            <Link
+              href="/profile"
+              className="hover:text-gray-300 transition underline"
+              title="Profile"
+            >
+              Go to Profile
+            </Link>
+          </p>
+        )}
 
         {bookmarks.length === 0 ? (
           <p className="text-gray-600">No bookmarks yet.</p>

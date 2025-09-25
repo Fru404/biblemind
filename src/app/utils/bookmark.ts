@@ -47,10 +47,11 @@ export async function bookMark(
   localStorage.setItem("bookmarked", JSON.stringify(existingBookmarks));
   console.log("Bookmark saved to cache:", newBookmark);
 
-  if (!email) return;
+  
   // Insert all cached bookmarks into Supabase only if email exists
+  if (email !== 'anonymous@user.biblemind.onrender.com') {
   console.log("Inserting bookmarks to Supabase for:", email);
-    const { error } = await supabase.from("bookmark_table").insert([
+  const { error } = await supabase.from("bookmark_table").insert([
   {
     name,
     email,
@@ -58,7 +59,9 @@ export async function bookMark(
     summary: summary,
     date: new Date().toLocaleString("en-GB"),
   },
+
 ]);
+
 
 
     if (error) {
@@ -66,7 +69,7 @@ export async function bookMark(
     } else {
       console.log("Bookmarks inserted successfully!");
     }
-  
+  }
 }
 
 // Helper function to generate a summary
