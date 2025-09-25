@@ -185,7 +185,7 @@ export default function Home() {
 
         {/* Center brand */}
         <div className="absolute left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold tracking-wide">
-          biblemind
+          BibleMind
         </div>
 
         {/* Desktop links + Profile icon */}
@@ -271,17 +271,17 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Clear cache button */}
+        {/* Clear cache button 
         <div className="mb-4">
           <button
             onClick={clearCache}
             title="Clear Cache"
             className="flex items-center gap-2 text-[#8B0000]"
           >
-            <FaBroom size={20} /> Clear cache in case of an error
+            <FaBroom size={20} /> Clear cache
           </button>
         </div>
-
+*/}
         {/* Calendar Picker */}
         <div className="flex justify-center mb-6">
           <div className="w-64 bg-white p-4 rounded shadow-md border border-gray-200">

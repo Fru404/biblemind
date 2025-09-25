@@ -34,7 +34,7 @@ export default function Profile() {
           {/* Burger button opens drawer */}
 
           <div className="text-xl md:text-2xl font-bold tracking-wide">
-            biblemind
+            <Link href="/">BibleMind</Link>
           </div>
         </div>
 
