@@ -1,6 +1,6 @@
 // src/app/api/bible-ai/route.ts
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -12,7 +12,8 @@ if (!apiKey) {
   throw new Error("GEMINI_API_KEY is not defined in environment variables.");
 }
 
-const genAI = new GoogleGenerativeAI(apiKey);
+// Create the client
+const ai = new GoogleGenAI({ apiKey });
 
 export async function POST(req: Request) {
   try {
@@ -44,10 +45,14 @@ ${history}
 Answer the last user question clearly and thoughtfully.
 `;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(prompt);
+    // ✅ Direct call with the new SDK
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
 
-    return NextResponse.json({ reply: result.response.text() });
+    // 'text' is a property (getter), not a function
+    return NextResponse.json({ reply: response.text });
   } catch (err) {
     console.error("Gemini API error:", err);
     const message =
