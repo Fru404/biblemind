@@ -12,6 +12,11 @@ interface Bookmark {
   date: string;
   summary?: string;
 }
+interface BookmarkRow {
+  email: string;
+  name: string | null;
+  bookmark: Bookmark;
+}
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -44,8 +49,7 @@ export default function BookmarksPage() {
       }
 
       const supabaseBookmarks: Bookmark[] =
-        data?.map((item: any) => item.bookmark) || [];
-
+        (data as BookmarkRow[])?.map((item) => item.bookmark) || [];
       // 3. Identify local bookmarks not in Supabase
       const newBookmarks = localBookmarks.filter(
         (lb) => !supabaseBookmarks.find((sb) => sb.id === lb.id)
