@@ -185,7 +185,7 @@ export default function Home() {
 
         {/* Center brand */}
         <div className="absolute left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold tracking-wide">
-          BibleMind
+          Biblemind
         </div>
 
         {/* Desktop links + Profile icon */}
@@ -201,7 +201,7 @@ export default function Home() {
               </Link>
             )
           )}
-          {/* ✨ Religious profile icon only when logged in */}
+          {/* Religious profile icon only when logged in */}
           {session && (
             <Link
               href="/profile"

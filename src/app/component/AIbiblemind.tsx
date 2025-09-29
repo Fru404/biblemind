@@ -152,7 +152,15 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
         <div className="fixed bottom-4 right-4 w-80 bg-white border rounded shadow-lg flex flex-col">
           {/* HEADER */}
           <div className="flex justify-between items-center p-2 border-b bg-[#8B0000] text-white font-bold">
-            <span>BibleMind AI</span>
+            <Image
+              src={ai_icon}
+              alt="Biblemind AI icon"
+              width={25}
+              height={25}
+              className="rounded"
+              style={{ cursor: "pointer" }}
+            />
+            <span>Biblemind</span>
             <div className="flex gap-2 items-center">
               <button onClick={clearChat} title="Clear Chat">
                 <FaTrash size={14} />
