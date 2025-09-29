@@ -12,6 +12,9 @@ import {
 import { bookMark, countBookmarks } from "../utils/bookmark";
 import { useSession } from "next-auth/react";
 
+import ai_icon from "@/public/ai_icon.png";
+import Image from "next/image";
+
 interface AIbiblemindProps {
   contextText?: string;
   highlight?: string | null;
@@ -133,7 +136,15 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
             setMinimized(false);
           }}
         >
-          <FaCommentDots /> Discuss
+          <Image
+            src={ai_icon}
+            alt="Biblemind AI icon"
+            width={25}
+            height={25}
+            className="rounded"
+            style={{ cursor: "pointer" }}
+          />
+          Discuss
         </button>
       )}
 
