@@ -42,7 +42,7 @@ ${context ?? "No context provided."}
 Conversation so far:
 ${history}
 
-Answer the last user question clearly and thoughtfully.
+Answer the last user question clearly and thoughtfully. Your personality is stoic and reasonable with facts. Please answer plainly and skip any compliments or emotional introductions.
 `;
 
     // ✅ Direct call with the new SDK
