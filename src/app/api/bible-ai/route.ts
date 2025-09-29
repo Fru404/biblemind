@@ -7,31 +7,36 @@ interface ChatMessage {
   content: string;
 }
 
-const apiKey = process.env.GEMINI_API_KEY; 
-if (!apiKey) { throw new Error("GEMINI_API_KEY is not defined in your environment variables."); } 
+const apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey) {
+  throw new Error("GEMINI_API_KEY is not defined in environment variables.");
+}
+
 const genAI = new GoogleGenerativeAI(apiKey);
+
 export async function POST(req: Request) {
   try {
-    const { messages, context } = await req.json();
+    const { messages, context } = (await req.json()) as {
+      messages?: ChatMessage[];
+      context?: string;
+    };
 
-    if (!messages || !Array.isArray(messages)) {
+    if (!Array.isArray(messages)) {
       return NextResponse.json(
-        { error: "Invalid request: messages array is required." },
+        { error: "Invalid request: a 'messages' array is required." },
         { status: 400 }
       );
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    const history = (messages as ChatMessage[])
+    const history = messages
       .map((m) => `${m.role === "user" ? "User" : "AI"}: ${m.content}`)
       .join("\n");
 
     const prompt = `
-You are BibleMind AI. Your role is to explain daily Vatican scripture readings and Pope's reflections. Provide response like a normal person will do
+You are BibleMind AI. Your role is to explain daily Vatican scripture readings and the Pope's reflections in a friendly, conversational way.
 
 Here are today's readings:
-${context}
+${context ?? "No context provided."}
 
 Conversation so far:
 ${history}
@@ -39,16 +44,14 @@ ${history}
 Answer the last user question clearly and thoughtfully.
 `;
 
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(prompt);
 
-    const response = result.response.text();
-
-    return NextResponse.json({ reply: response });
-  } catch (err: unknown) {
+    return NextResponse.json({ reply: result.response.text() });
+  } catch (err) {
     console.error("Gemini API error:", err);
-
-    // Safely handle unknown
-    const message = err instanceof Error ? err.message : "Internal server error";
+    const message =
+      err instanceof Error ? err.message : "Unexpected internal server error.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

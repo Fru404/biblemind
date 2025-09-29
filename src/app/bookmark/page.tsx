@@ -53,7 +53,7 @@ export default function BookmarksPage() {
               className="hover:text-gray-300 transition underline"
               title="Profile"
             >
-              Go to Profile
+              Go to Sigin
             </Link>
           </p>
         )}

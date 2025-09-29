@@ -75,10 +75,7 @@ export default function SignIn() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* LEFT – Name & Email login */}
-            <form
-              onSubmit={handleRegister}
-              className="flex flex-col gap-4 justify-center"
-            >
+            <form className="flex flex-col gap-4 justify-center">
               <div className="relative">
                 <FaUser className="absolute left-3 top-3 text-gray-400" />
                 <input
@@ -102,8 +99,7 @@ export default function SignIn() {
                 disabled={loading}
                 className="flex items-center justify-center gap-2 bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition disabled:opacity-50"
               >
-                <FaKey />
-                {loading ? "Logging in…" : "Login"}
+                Sign in
               </button>
             </form>
 
@@ -111,10 +107,10 @@ export default function SignIn() {
             <div className="flex flex-col justify-center gap-6">
               <button
                 type="button"
-                className="cursor-pointer flex items-center justify-center gap-2 w-full bg-[#8B0000] text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-800 transition"
-                onClick={() => alert("Pauthtato login API call here")}
+                className="cursor-pointer flex items-center justify-center gap-2 w-full bg-[#836740] text-white py-2 px-4 rounded-lg hover:bg-[#614f29] transition"
+                onClick={handleRegister}
               >
-                Pauthtato (Beta)
+                {loading ? "Logging in…" : "Pauthtato Login (beta)"}
               </button>
 
               <div className="flex items-center">

@@ -55,7 +55,7 @@ export async function bookMark(
   {
     name,
     email,
-    bookmark: message.content,
+    bookmark: newBookmark,
     summary: summary,
     date: new Date().toLocaleString("en-GB"),
   },

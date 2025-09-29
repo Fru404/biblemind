@@ -56,13 +56,11 @@ export default function Profile() {
       </nav>
 
       {/* Main placeholder page */}
-      <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
+      <main className="flex-grow flex flex-col p-6 ">
         <h1 className="text-2xl font-semibold text-gray-800 mb-2">
-          Welcome, {session.user?.name}
+          Account page
         </h1>
-        <p className="text-gray-600">
-          Use the menu (☰) to view profile details or sign out.
-        </p>
+        <p className="text-gray-600">{session.user?.name}</p>
       </main>
 
       {/* Slide-in Profile Drawer */}
