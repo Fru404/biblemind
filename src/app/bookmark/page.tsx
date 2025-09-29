@@ -3,19 +3,82 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { createClient } from "@supabase/supabase-js";
 
 interface Bookmark {
   id: string;
   role: string;
-  content?: string; // made optional
+  content?: string;
   date: string;
-  summary?: string; // made optional
+  summary?: string;
 }
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const { data: session } = useSession();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_KEY!
+  );
 
+  // Sync bookmarks with Supabase when user signs in
+  useEffect(() => {
+    const email = session?.user?.email;
+    if (!email) return;
+
+    async function syncBookmarks() {
+      // 1. Load local bookmarks
+      const localBookmarks: Bookmark[] = JSON.parse(
+        localStorage.getItem("bookmarked") || "[]"
+      );
+
+      // 2. Fetch Supabase bookmarks
+      const { data, error } = await supabase
+        .from("bookmark_table")
+        .select("bookmark")
+        .eq("email", email);
+
+      if (error) {
+        console.error("Error fetching from Supabase:", error);
+        return;
+      }
+
+      const supabaseBookmarks: Bookmark[] =
+        data?.map((item: any) => item.bookmark) || [];
+
+      // 3. Identify local bookmarks not in Supabase
+      const newBookmarks = localBookmarks.filter(
+        (lb) => !supabaseBookmarks.find((sb) => sb.id === lb.id)
+      );
+
+      // 4. Insert missing bookmarks into Supabase
+      if (newBookmarks.length > 0) {
+        const { error: insertError } = await supabase
+          .from("bookmark_table")
+          .insert(
+            newBookmarks.map((bm) => ({
+              email,
+              name: session?.user?.name || null,
+              bookmark: bm, // store the JSON object
+            }))
+          );
+
+        if (insertError)
+          console.error("Error inserting bookmarks:", insertError);
+      }
+
+      // 5. Merge for display
+      const merged = [...supabaseBookmarks, ...newBookmarks];
+      setBookmarks(merged);
+
+      // Update localStorage with merged bookmarks
+      localStorage.setItem("bookmarked", JSON.stringify(merged));
+    }
+
+    syncBookmarks();
+  }, [session]);
+
+  // Load local bookmarks immediately for fast UI
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("bookmarked") || "[]");
     setBookmarks(stored);
