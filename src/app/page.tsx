@@ -204,13 +204,21 @@ export default function Home() {
       onMouseUp={handleMouseUp}
     >
       {/* NAVBAR */}
+      {/* NAVBAR */}
       <nav className="relative z-20 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md">
-        <button onClick={() => setMenuOpen(true)} className="md:hidden z-30">
-          <FaBars size={24} />
-        </button>
+        {/* Mobile Menu Button (only shows if menu is closed) */}
+        {!menuOpen && (
+          <button onClick={() => setMenuOpen(true)} className="md:hidden z-30">
+            <FaBars size={24} />
+          </button>
+        )}
+
+        {/* Brand */}
         <div className="absolute left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold tracking-wide">
           Biblemind
         </div>
+
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 ml-auto">
           {["Devotions", "About", "Bookmark", "Contact", "Signin"].map(
             (label) => (
@@ -233,6 +241,48 @@ export default function Home() {
             </Link>
           )}
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {menuOpen && (
+          <div className="fixed inset-0 z-20 md:hidden flex">
+            {/* Red background drawer */}
+            <div className="w-3/4 max-w-xs h-full bg-[#8B0000] p-6 flex flex-col gap-6 relative text-white">
+              {/* Close X button */}
+              <button
+                className="absolute top-4 right-4 text-white text-2xl font-bold"
+                onClick={() => setMenuOpen(false)}
+              >
+                <FaTimes />
+              </button>
+
+              {["Devotions", "About", "Bookmark", "Contact", "Signin"].map(
+                (label) => (
+                  <Link
+                    key={label}
+                    href={`/${label.toLowerCase()}`}
+                    className="hover:text-gray-300 font-semibold"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {label}
+                  </Link>
+                )
+              )}
+
+              {session && (
+                <Link
+                  href="/profile"
+                  className="hover:text-gray-300 font-semibold"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+              )}
+            </div>
+
+            {/* Clicking outside closes menu */}
+            <div className="flex-1" onClick={() => setMenuOpen(false)}></div>
+          </div>
+        )}
       </nav>
 
       {/* MAIN SECTION */}
