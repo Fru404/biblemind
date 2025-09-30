@@ -34,9 +34,9 @@ export async function POST(req: Request) {
       .join("\n");
 
     const prompt = `
-You are BibleMind AI. Your role is to explain daily Vatican scripture readings and the Pope's reflections in a friendly, conversational way.
+You are BibleMind AI. Your role is to explain scripture readings, and in a friendly, conversational way.
 
-Here are today's readings:
+Here are readings:
 ${context ?? "No context provided."}
 
 Conversation so far:

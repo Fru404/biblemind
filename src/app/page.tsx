@@ -1,13 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
-import { FaBars, FaTimes, FaBroom } from "react-icons/fa";
+
+import { useEffect, useState, useRef } from "react";
+import { FaBars, FaTimes, FaBroom, FaChevronUp, FaBible } from "react-icons/fa";
 import { FaCross } from "react-icons/fa6";
 import Link from "next/link";
 import { toDDMMYYYY } from "@/src/app/utils/dd-mm-yyyy";
 import AIbiblemind from "./component/AIbiblemind";
-import biblemind from "@/public/biblemind.png";
-import Image from "next/image";
-import { FaChevronUp } from "react-icons/fa";
 
 import { useSession } from "next-auth/react";
 
@@ -35,16 +33,22 @@ export default function Home() {
     y: number;
   } | null>(null);
 
+  // Floating Bible button state
+  const [biblePos, setBiblePos] = useState({ bottom: 16, right: 16 });
+  const draggingRef = useRef(false);
+  const startPosRef = useRef({ x: 0, y: 0 });
+
   // Fetch today's date initially
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setSelectedDate(toDDMMYYYY(today));
   }, []);
+
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowTopBtn(window.scrollY > 200); // show after 200px scroll
+      setShowTopBtn(window.scrollY > 200);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -57,16 +61,11 @@ export default function Home() {
   // Fetch readings from API or cache
   useEffect(() => {
     const biblemind_Key = process.env.NEXT_PUBLIC_BIBLEMIND_API_KEY;
-    if (!biblemind_Key) {
-      throw new Error(
-        "BIBLEMIND_API_KEY is not defined in your environment variables."
-      );
-    }
+    if (!biblemind_Key) throw new Error("BIBLEMIND_API_KEY is not defined.");
     if (!selectedDate) return;
 
     const fetchReadings = async () => {
       setLoading(true);
-
       let cache: Record<string, ReadingEntry> = {};
       const cachedDataString = localStorage.getItem("biblemind-cache");
       if (cachedDataString) {
@@ -139,18 +138,12 @@ export default function Home() {
     fetchReadings();
   }, [selectedDate]);
 
-  // Spinner component
+  // Spinner
   const Spinner = () => (
     <div className="flex justify-center items-center h-10">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#000000]" />
     </div>
   );
-
-  // Clear cache
-  const clearCache = () => {
-    localStorage.removeItem("biblemind-cache");
-    alert("Cache cleared!");
-  };
 
   // Highlight handler
   const handleMouseUp = () => {
@@ -171,6 +164,40 @@ export default function Home() {
     }
   };
 
+  // Drag handlers for Bible button
+  const handleMouseDown = (e: React.MouseEvent) => {
+    draggingRef.current = true;
+    startPosRef.current = { x: e.clientX, y: e.clientY };
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!draggingRef.current) return;
+
+    const dx = e.clientX - startPosRef.current.x;
+    const dy = e.clientY - startPosRef.current.y;
+
+    setBiblePos((prev) => ({
+      bottom: Math.max(0, prev.bottom - dy),
+      right: Math.max(0, prev.right - dx),
+    }));
+
+    startPosRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseUpGlobal = () => {
+    draggingRef.current = false;
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUpGlobal);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUpGlobal);
+    };
+  }, []);
+
   return (
     <div
       className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900"
@@ -178,17 +205,12 @@ export default function Home() {
     >
       {/* NAVBAR */}
       <nav className="relative z-20 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md">
-        {/* Mobile burger */}
         <button onClick={() => setMenuOpen(true)} className="md:hidden z-30">
           <FaBars size={24} />
         </button>
-
-        {/* Center brand */}
         <div className="absolute left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold tracking-wide">
           Biblemind
         </div>
-
-        {/* Desktop links + Profile icon */}
         <div className="hidden md:flex items-center gap-6 ml-auto">
           {["Devotions", "About", "Bookmark", "Contact", "Signin"].map(
             (label) => (
@@ -201,7 +223,6 @@ export default function Home() {
               </Link>
             )
           )}
-          {/* Religious profile icon only when logged in */}
           {session && (
             <Link
               href="/profile"
@@ -214,53 +235,8 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Mobile menu overlay */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-10"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-
-      {/* Mobile menu */}
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-[#8B0000] text-white z-20 transform transition-transform duration-300 ${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex justify-end p-4">
-          <button onClick={() => setMenuOpen(false)} className="text-white">
-            <FaTimes size={22} />
-          </button>
-        </div>
-        <nav className="flex flex-col gap-4 px-6 py-2 text-lg">
-          {["Devotions", "About", "Bookmark", "Contact", "Signin"].map(
-            (label, i) => (
-              <Link
-                key={i}
-                href={`/${label.toLowerCase()}`}
-                className="hover:text-gray-300"
-                onClick={() => setMenuOpen(false)}
-              >
-                {label}
-              </Link>
-            )
-          )}
-          {session && (
-            <Link
-              href="/profile"
-              className="hover:text-gray-300 transition"
-              title="Profile"
-            >
-              Profile
-            </Link>
-          )}
-        </nav>
-      </div>
-
       {/* MAIN SECTION */}
       <main className="flex-grow px-4 py-6 md:px-12 relative">
-        {/* Ask AI button */}
         {showAskButton && askPosition && (
           <div
             style={{ top: askPosition.y, left: askPosition.x }}
@@ -280,17 +256,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Clear cache button 
-        <div className="mb-4">
-          <button
-            onClick={clearCache}
-            title="Clear Cache"
-            className="flex items-center gap-2 text-[#8B0000]"
-          >
-            <FaBroom size={20} /> Clear cache
-          </button>
-        </div>
-*/}
         {/* Calendar Picker */}
         <div className="flex justify-center mb-6">
           <div className="w-64 bg-white p-4 rounded shadow-md border border-gray-200">
@@ -312,9 +277,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Layout: Menu left + Content right */}
+        {/* Content */}
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Left Menu */}
           <aside className="md:w-1/4">
             <section className="bg-white rounded shadow p-4">
               <h2 className="text-xl font-semibold text-[#8B0000] mb-4">
@@ -334,7 +298,6 @@ export default function Home() {
             </section>
           </aside>
 
-          {/* Right Content */}
           <div className="flex flex-col gap-6 md:w-3/4">
             {["reading", "gospel", "words of the pope"].map((section) => (
               <section
@@ -369,20 +332,20 @@ export default function Home() {
               </section>
             ))}
           </div>
-        </div>
-        {/*
-        {showTopBtn && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-6 left-6 z-50
-               bg-[#8B0000] text-white rounded-full
-               w-10 h-10 flex items-center justify-center
-               shadow-lg hover:bg-red-700 transition"
-            aria-label="Back to top"
+
+          {/* Floating Bible Button on left */}
+          <div
+            className="fixed z-50 cursor-grab"
+            style={{ bottom: biblePos.bottom, left: biblePos.right }} // use left instead of right
+            onMouseDown={handleMouseDown}
           >
-            <FaChevronUp />
-          </button>
-        )}*/}
+            <Link href="/devotions/bible">
+              <div className="bg-[#8B0000] text-white p-4 rounded-full shadow-lg hover:bg-red-700 transition">
+                <FaBible size={28} />
+              </div>
+            </Link>
+          </div>
+        </div>
       </main>
 
       {/* FOOTER */}
@@ -390,15 +353,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:justify-between gap-4">
           <div className="flex items-center gap-2">
             <Link href="/">
-              <Image
-                src={biblemind}
-                alt="share"
-                style={{ cursor: "pointer" }}
-                className="h-25 w-25 rounded"
-              />
+              <div className="h-10 w-10 rounded bg-white text-[#8B0000] flex items-center justify-center font-bold">
+                BM
+              </div>
             </Link>
           </div>
-          {/* Links on right */}
           <div className="flex gap-6 text-sm">
             <Link href="/bookmark" className="hover:underline">
               Bookmark
