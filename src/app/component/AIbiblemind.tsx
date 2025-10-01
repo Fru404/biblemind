@@ -200,7 +200,7 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
                 {messages.map((m, i) => (
                   <div
                     key={i}
-                    className={`p-2 rounded-lg break-words max-w-[80%] ${
+                    className={`p-2 rounded-lg break-words max-w-[80%] text-xl md:text-2xl font-medium ${
                       m.role === "user"
                         ? "bg-[#8b1817] text-white self-end ml-auto"
                         : "bg-gray-100 text-gray-800 self-start mr-auto"
