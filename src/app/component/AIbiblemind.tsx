@@ -150,24 +150,35 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
       )}
 
       {open && (
-        <div className="fixed bottom-4 right-4 w-80 bg-white border rounded shadow-lg flex flex-col z-50">
+        <div className="fixed bottom-4 right-4 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl flex flex-col z-50 overflow-hidden">
           {/* HEADER */}
-          <div className="flex justify-between items-center p-2 border-b bg-[#8B0000] text-white font-bold">
-            <Image
-              src={ai_icon}
-              alt="Biblemind AI icon"
-              width={25}
-              height={25}
-              className="rounded"
-              style={{ cursor: "pointer" }}
-            />
-            <span>Biblemind</span>
-            <div className="flex gap-2 items-center">
-              <button onClick={clearChat} title="Clear Chat">
-                <FaTrash size={14} />
+          <div className="flex justify-between items-center p-3 bg-[#8B0000] text-white font-semibold shadow-sm">
+            <div className="flex items-center gap-2">
+              <Image
+                src={ai_icon}
+                alt="Biblemind AI icon"
+                width={30}
+                height={28}
+                className="rounded-full"
+                style={{ cursor: "pointer" }}
+              />
+              <span className="text-lg">Biblemind</span>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={clearChat}
+                title="Clear Chat"
+                className="p-1 hover:bg-red-700 rounded transition"
+              >
+                <FaTrash size={16} />
               </button>
-              <button onClick={() => setMinimized((m) => !m)} title="Minimize">
-                <FaMinus size={14} />
+              <button
+                onClick={() => setMinimized((m) => !m)}
+                title="Minimize"
+                className="p-1 hover:bg-red-700 rounded transition"
+              >
+                <FaMinus size={16} />
               </button>
               <button
                 onClick={() => {
@@ -175,8 +186,9 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
                   setMinimized(false);
                 }}
                 title="Close"
+                className="p-1 hover:bg-red-700 rounded transition"
               >
-                <FaTimes size={14} />
+                <FaTimes size={16} />
               </button>
             </div>
           </div>
@@ -184,26 +196,28 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
           {/* CONTENT */}
           {!minimized && (
             <>
-              <div className="flex-1 p-2 overflow-y-auto space-y-2 text-sm max-h-64">
+              <div className="flex-1 p-3 overflow-y-auto space-y-2 text-sm max-h-72 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                 {messages.map((m, i) => (
                   <div
                     key={i}
-                    className={`p-2 rounded ${
+                    className={`p-2 rounded-lg break-words max-w-[80%] ${
                       m.role === "user"
-                        ? "bg-[#8b1817] text-white self-end"
-                        : "bg-[#f5f5f5] text-gray-800"
+                        ? "bg-[#8b1817] text-white self-end ml-auto"
+                        : "bg-gray-100 text-gray-800 self-start mr-auto"
                     }`}
                   >
                     {m.content}
                   </div>
                 ))}
-                {loading && <div className="text-gray-500">...</div>}
+                {loading && (
+                  <div className="text-gray-400 italic">Loading...</div>
+                )}
               </div>
 
               {/* INPUT */}
-              <div className="p-2 flex gap-2 border-t">
+              <div className="p-2 flex gap-2 border-t border-gray-200 bg-gray-50">
                 <button
-                  className="bg-[#8B0000] text-white px-2 rounded flex items-center justify-center"
+                  className="bg-[#8B0000] hover:bg-red-700 text-white px-3 py-1 rounded flex items-center justify-center transition"
                   onClick={handleBookmark}
                   disabled={loading}
                   title="Bookmark last message"
@@ -212,7 +226,7 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
                 </button>
 
                 <input
-                  className="flex-1 border rounded px-2 py-1 text-sm"
+                  className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -220,7 +234,7 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
                 />
 
                 <button
-                  className="bg-[#8B0000] text-white px-2 rounded flex items-center justify-center"
+                  className="bg-[#8B0000] hover:bg-red-700 text-white px-3 py-1 rounded flex items-center justify-center transition"
                   onClick={sendMessage}
                   disabled={loading}
                 >

@@ -29,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* Apply font + bigger size */}
-      <body className={`${garamond.className} text-lg leading-relaxed`}>
+      <body
+        className={`${garamond.className} text-xl md:text-2xl font-medium leading-relaxed md:leading-loose`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>
