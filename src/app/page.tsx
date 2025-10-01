@@ -214,7 +214,7 @@ export default function Home() {
         )}
 
         {/* Brand */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold tracking-wide">
+        <div className="flex-1 text-center text-xl md:text-2xl font-bold tracking-wide">
           Biblemind
         </div>
 
