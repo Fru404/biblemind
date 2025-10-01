@@ -113,7 +113,7 @@ export default function BibleReaderPage() {
     <div className="min-h-screen bg-[#f5f5f5] text-gray-900 flex flex-col">
       {/* Navbar */}
       <nav className="bg-[#8B0000] text-white px-6 py-4 shadow-md flex justify-between items-center">
-        <h1 className="text-xl font-bold">Bible Reader</h1>
+        <h1 className="text-xl font-bold">Bible</h1>
         <Link href="/" className="hover:text-gray-300 transition">
           Back to Home
         </Link>

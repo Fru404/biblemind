@@ -306,8 +306,9 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Calendar Picker */}
-        <div className="flex justify-center mb-6">
+        {/* Calendar + Bible Button Container */}
+        <div className="flex justify-center items-center gap-4 mb-6 flex-wrap">
+          {/* Calendar Picker */}
           <div className="w-64 bg-white p-4 rounded shadow-md border border-gray-200">
             <label
               htmlFor="date-picker"
@@ -325,6 +326,13 @@ export default function Home() {
               className="w-full border border-gray-300 rounded px-3 py-2 shadow focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
             />
           </div>
+
+          {/* Bible Button */}
+          <Link href="/devotions/bible">
+            <div className="bg-white text-[#8B0000] p-4 rounded-full shadow-lg hover:bg-[#8B0000]-700 transition flex items-center justify-center">
+              <FaBible size={28} /> Bible
+            </div>
+          </Link>
         </div>
 
         {/* Content */}
@@ -381,19 +389,6 @@ export default function Home() {
                 )}
               </section>
             ))}
-          </div>
-
-          {/* Floating Bible Button on left */}
-          <div
-            className="fixed z-50 cursor-grab"
-            style={{ bottom: biblePos.bottom, left: biblePos.right }} // use left instead of right
-            onMouseDown={handleMouseDown}
-          >
-            <Link href="/devotions/bible">
-              <div className="bg-[#8B0000] text-white p-4 rounded-full shadow-lg hover:bg-red-700 transition">
-                <FaBible size={28} />
-              </div>
-            </Link>
           </div>
         </div>
       </main>
