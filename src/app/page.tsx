@@ -205,7 +205,7 @@ export default function Home() {
     >
       {/* NAVBAR */}
       {/* NAVBAR */}
-      <nav className="relative z-20 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md">
+      <nav className="relative z-20 mt-6 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md rounded-2xl transition-all duration-300 ease-in-out w-11/12 max-w-6xl mx-auto">
         {/* Mobile Menu Button (only shows if menu is closed) */}
         {!menuOpen && (
           <button onClick={() => setMenuOpen(true)} className="md:hidden z-30">

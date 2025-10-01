@@ -102,7 +102,7 @@ export default function BookmarksPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
       {/* NAVBAR */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 bg-[#8B0000] text-white shadow-md">
+      <nav className="relative z-20 mt-6 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md rounded-2xl transition-all duration-300 ease-in-out w-11/12 max-w-6xl mx-auto">
         <Link href="/" className="hover:underline">
           ← Back To Home
         </Link>

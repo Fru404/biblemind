@@ -121,7 +121,7 @@ export default function DevotionsPage() {
   return (
     <div className="min-h-screen bg-[#f5f5f5] text-gray-900 flex flex-col">
       {/* Navbar */}
-      <nav className="bg-[#8B0000] text-white px-6 py-4 shadow-md flex justify-between items-center">
+      <nav className="relative z-20 mt-6 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md rounded-2xl transition-all duration-300 ease-in-out w-11/12 max-w-6xl mx-auto">
         <h1 className="text-xl font-bold">Devotions</h1>
         <Link href="/" className="hover:text-gray-300 transition">
           Back to Home
