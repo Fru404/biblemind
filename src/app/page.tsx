@@ -200,7 +200,7 @@ export default function Home() {
 
   return (
     <div
-      className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900"
+      className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900 ${garamond.className}"
       onMouseUp={handleMouseUp}
     >
       {/* NAVBAR */}
@@ -301,9 +301,7 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-[#8B0000]">
             Daily scripture reading
           </h1>
-          <p className="text-md mt-2 text-gray-700">
-            Daily Vatican Readings & Reflections
-          </p>
+          <p className="text-md mt-2 text-gray-700"></p>
         </div>
 
         {/* Calendar + Bible Button Container */}

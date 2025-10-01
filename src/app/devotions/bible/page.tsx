@@ -3,8 +3,16 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import AIbiblemind from "../../component/AIbiblemind";
 
-const API_KEY = "54921fbabdf9d81b7272107c7791392c";
+const API_KEY = process.env.NEXT_PUBLIC_BIBLE_API_KEY;
+if (!API_KEY) {
+  throw new Error("BIBLE_API_KEY is not defined in environment variables.");
+}
 const BASE_URL = "https://api.scripture.api.bible/v1";
+
+// Reusable headers
+const headers: HeadersInit = {
+  "api-key": API_KEY as string,
+};
 
 // Types
 interface Book {
@@ -42,7 +50,7 @@ export default function BibleReaderPage() {
   useEffect(() => {
     async function fetchBooks() {
       const res = await fetch(`${BASE_URL}/bibles/${bibleId}/books`, {
-        headers: { "api-key": API_KEY },
+        headers,
       });
       const data = await res.json();
       setBooks(data.data || []);
@@ -56,7 +64,7 @@ export default function BibleReaderPage() {
     async function fetchChapters() {
       const res = await fetch(
         `${BASE_URL}/bibles/${bibleId}/books/${selectedBook}/chapters`,
-        { headers: { "api-key": API_KEY } }
+        { headers }
       );
       const data = await res.json();
       setChapters(data.data || []);
@@ -73,7 +81,7 @@ export default function BibleReaderPage() {
       setLoading(true);
       const res = await fetch(
         `${BASE_URL}/bibles/${bibleId}/chapters/${selectedChapter}/verses`,
-        { headers: { "api-key": API_KEY } }
+        { headers }
       );
       const data = await res.json();
 
@@ -81,7 +89,7 @@ export default function BibleReaderPage() {
       for (const v of data.data || []) {
         const verseRes = await fetch(
           `${BASE_URL}/bibles/${bibleId}/verses/${v.id}`,
-          { headers: { "api-key": API_KEY } }
+          { headers }
         );
         const verseData = await verseRes.json();
         versesData.push({
@@ -179,7 +187,6 @@ export default function BibleReaderPage() {
           </div>
         )}
 
-        {/* Passage Display */}
         {/* Passage Display */}
         {!loading && verses.length > 0 && (
           <section className="bg-white rounded shadow-md p-6">

@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./component/providers"; // client wrapper
+import { EB_Garamond } from "next/font/google"; // ⬅️ Import font
+
+// Load EB Garamond from Google Fonts
+const garamond = EB_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "BibleMind",
@@ -20,7 +28,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      {/* Apply font + bigger size */}
+      <body className={`${garamond.className} text-lg leading-relaxed`}>
         <Providers>{children}</Providers>
       </body>
     </html>
