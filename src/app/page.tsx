@@ -392,7 +392,7 @@ export default function Home() {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-[#8B0000] text-white p-6">
+      <footer className="relative z-20 mt-6 px-6 py-4 bg-white text-[#8B0000] shadow-md rounded-2xl w-11/12 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 transition-all duration-300 ease-in-out">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:justify-between gap-4">
           <div className="flex items-center gap-2">
             <Link href="/">

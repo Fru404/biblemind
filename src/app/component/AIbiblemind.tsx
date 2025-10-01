@@ -130,11 +130,12 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
 
       {!open && (
         <button
-          className="fixed bottom-4 right-4 bg-[#8b1817] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2"
+          className="fixed bottom-4 right-4 bg-[#8b1817] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2 z-50 "
           onClick={() => {
             setOpen(true);
             setMinimized(false);
           }}
+          style={{ cursor: "pointer" }}
         >
           <Image
             src={ai_icon}
@@ -149,7 +150,7 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
       )}
 
       {open && (
-        <div className="fixed bottom-4 right-4 w-80 bg-white border rounded shadow-lg flex flex-col">
+        <div className="fixed bottom-4 right-4 w-80 bg-white border rounded shadow-lg flex flex-col z-50">
           {/* HEADER */}
           <div className="flex justify-between items-center p-2 border-b bg-[#8B0000] text-white font-bold">
             <Image
