@@ -111,10 +111,11 @@ export default function Profile() {
           >
             <div className="relative w-full aspect-[4/5]">
               <img
-                src=""
+                src="https://raw.githubusercontent.com/Fru404/Web/refs/heads/main/bible%20bm.png"
                 alt="Bible"
                 className="object-cover w-full h-full absolute inset-0 group-hover:brightness-90 transition"
               />
+              sx
             </div>
             <div className="p-4">
               <h2 className="text-lg font-semibold text-gray-800 group-hover:text-[#8B0000]">
