@@ -91,7 +91,7 @@ export default function Profile() {
             <div className="relative w-full aspect-[4/5]">
               <img
                 src="https://raw.githubusercontent.com/Fru404/Web/refs/heads/main/Bookmark%20biblemind.png"
-                alt="Daily Readings"
+                alt="bookmarks"
                 className="object-cover w-full h-full absolute inset-0 group-hover:brightness-90 transition"
               />
             </div>
@@ -101,6 +101,27 @@ export default function Profile() {
               </h2>
               <p className="text-sm text-gray-500 mt-1">
                 View and manage your saved verses.
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href="/devotions/bible"
+            className="group bg-white rounded-3xl shadow-md hover:shadow-xl overflow-hidden transition transform hover:scale-[1.02]"
+          >
+            <div className="relative w-full aspect-[4/5]">
+              <img
+                src=""
+                alt="Bible"
+                className="object-cover w-full h-full absolute inset-0 group-hover:brightness-90 transition"
+              />
+            </div>
+            <div className="p-4">
+              <h2 className="text-lg font-semibold text-gray-800 group-hover:text-[#8B0000]">
+                Bible
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                Read and Interact with scripture readings
               </p>
             </div>
           </Link>

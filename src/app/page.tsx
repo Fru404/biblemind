@@ -39,9 +39,12 @@ export default function Home() {
   const draggingRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0 });
   const router = useRouter();
+
   useEffect(() => {
-    if (session) {
+    const hasRun = sessionStorage.getItem("redirected");
+    if (!hasRun && session) {
       router.push("/profile");
+      sessionStorage.setItem("redirected", "true");
     }
   }, [session, router]);
 
