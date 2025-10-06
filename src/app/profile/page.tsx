@@ -56,11 +56,55 @@ export default function Profile() {
       </nav>
 
       {/* Main placeholder page */}
-      <main className="flex-grow flex flex-col p-6 ">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-2">
-          Account page
-        </h1>
-        <p className="text-gray-600">{session.user?.name}</p>
+      <main className="flex-grow flex flex-col items-center p-6">
+        {/* Instagram-style card grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-3xl">
+          {/* Daily Readings */}
+          <Link
+            href="/"
+            className="group bg-white rounded-3xl shadow-md hover:shadow-xl overflow-hidden transition transform hover:scale-[1.02]"
+          >
+            <div className="relative w-full aspect-[4/5]">
+              <div className="relative w-full aspect-[4/5]">
+                <img
+                  src="https://raw.githubusercontent.com/Fru404/Web/main/Daily%20readings%20biblemind.png"
+                  alt="Daily Readings"
+                  className="object-cover w-full h-full absolute inset-0 group-hover:brightness-90 transition"
+                />
+              </div>
+            </div>
+            <div className="p-4">
+              <h2 className="text-lg font-semibold text-gray-800 group-hover:text-[#8B0000]">
+                Daily Readings
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                {"Read today's scripture and reflection."}
+              </p>
+            </div>
+          </Link>
+
+          {/* Bookmarks */}
+          <Link
+            href="/bookmark"
+            className="group bg-white rounded-3xl shadow-md hover:shadow-xl overflow-hidden transition transform hover:scale-[1.02]"
+          >
+            <div className="relative w-full aspect-[4/5]">
+              <img
+                src="https://raw.githubusercontent.com/Fru404/Web/refs/heads/main/Bookmark%20biblemind.png"
+                alt="Daily Readings"
+                className="object-cover w-full h-full absolute inset-0 group-hover:brightness-90 transition"
+              />
+            </div>
+            <div className="p-4">
+              <h2 className="text-lg font-semibold text-gray-800 group-hover:text-[#8B0000]">
+                Bookmarks
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                View and manage your saved verses.
+              </p>
+            </div>
+          </Link>
+        </div>
       </main>
 
       {/* Slide-in Profile Drawer */}
