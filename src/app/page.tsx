@@ -6,6 +6,7 @@ import { FaCross } from "react-icons/fa6";
 import Link from "next/link";
 import { toDDMMYYYY } from "@/src/app/utils/dd-mm-yyyy";
 import AIbiblemind from "./component/AIbiblemind";
+import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
 
@@ -37,6 +38,12 @@ export default function Home() {
   const [biblePos, setBiblePos] = useState({ bottom: 16, right: 16 });
   const draggingRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0 });
+  const router = useRouter();
+  useEffect(() => {
+    if (session) {
+      router.push("/profile");
+    }
+  }, [session, router]);
 
   // Fetch today's date initially
   useEffect(() => {
@@ -366,7 +373,7 @@ export default function Home() {
                     ? "Readings"
                     : section === "gospel"
                     ? "Gospel"
-                    : ""}
+                    : "Words of the pope"}
                 </h2>
                 {loading ? (
                   <Spinner />
