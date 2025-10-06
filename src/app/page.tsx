@@ -341,7 +341,7 @@ export default function Home() {
                 Menu
               </h2>
               <nav className="flex flex-col gap-2">
-                {["Reading", "Gospel", "Words of the Pope"].map((label, i) => (
+                {["Reading", "Gospel", ""].map((label, i) => (
                   <a
                     key={i}
                     href={`#${label.toLowerCase().replace(/\s/g, "")}`}
@@ -355,7 +355,7 @@ export default function Home() {
           </aside>
 
           <div className="flex flex-col gap-6 md:w-3/4">
-            {["reading", "gospel", "words of the pope"].map((section) => (
+            {["reading", "gospel", ""].map((section) => (
               <section
                 key={section}
                 id={section}
@@ -366,7 +366,7 @@ export default function Home() {
                     ? "Readings"
                     : section === "gospel"
                     ? "Gospel"
-                    : "Words of the Pope"}
+                    : ""}
                 </h2>
                 {loading ? (
                   <Spinner />

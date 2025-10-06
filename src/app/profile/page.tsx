@@ -126,19 +126,22 @@ export default function Profile() {
         </div>
       </aside>
 
-      {/* FOOTER (same as Home) */}
-      <footer className="bg-[#8B0000] text-white p-6 mt-auto">
+      {/* FOOTER */}
+      <footer className="relative z-20 mt-6 px-6 py-4 bg-white text-[#8B0000] shadow-md rounded-2xl w-11/12 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 transition-all duration-300 ease-in-out">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:justify-between gap-4">
-          <Link href="/">
-            <Image
-              src={biblemind}
-              alt="BibleMind"
-              className="h-20 w-auto cursor-pointer rounded"
-            />
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <div className="h-10 w-10 rounded bg-white text-[#8B0000] flex items-center justify-center font-bold">
+                BM
+              </div>
+            </Link>
+          </div>
           <div className="flex gap-6 text-sm">
             <Link href="/bookmark" className="hover:underline">
               Bookmark
+            </Link>
+            <Link href="/signin" className="hover:underline">
+              Signin
             </Link>
             <Link href="/contact" className="hover:underline">
               Contact
