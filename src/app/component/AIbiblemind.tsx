@@ -33,6 +33,7 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+  const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     if (highlight) {
@@ -103,13 +104,16 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
         session?.user?.name || "Anonymous",
         session?.user?.email ?? "anonymous@user.biblemind.onrender.com"
       );
-      setNotification("Bookmarked! ✅");
+      setBookmarked(true);
+      setNotification("Bookmarked successfully!");
+      setTimeout(() => setNotification(""), 2000);
     } catch (err) {
       console.error(err);
       setNotification("Failed to bookmark ❌");
+    } finally {
+      setLoading(false);
     }
-
-    setTimeout(() => setNotification(null), 2000);
+    setTimeout(() => setNotification(""), 2000);
   };
 
   if (status === "loading") {
@@ -122,12 +126,6 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
 
   return (
     <div>
-      {notification && (
-        <div className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
-          {notification}
-        </div>
-      )}
-
       {!open && (
         <button
           className="fixed bottom-4 right-4 bg-[#8b1817] text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-2 z-50 "
@@ -223,6 +221,11 @@ const AIbiblemind: React.FC<AIbiblemindProps> = ({
                   title="Bookmark last message"
                 >
                   <FaBookmark />
+                  {notification && (
+                    <div className="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+                      {notification}
+                    </div>
+                  )}
                 </button>
 
                 <input

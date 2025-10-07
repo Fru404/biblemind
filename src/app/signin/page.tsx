@@ -74,7 +74,7 @@ export default function SignIn() {
           <h2 className="text-2xl font-bold text-center mb-8">Sign In</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {/* LEFT – Name & Email login */}
+            {/*
             <form className="flex flex-col gap-4 justify-center">
               <div className="relative">
                 <FaUser className="absolute left-3 top-3 text-gray-400" />
@@ -104,7 +104,9 @@ export default function SignIn() {
             </form>
 
             {/* RIGHT – Other sign-in methods */}
+
             <div className="flex flex-col justify-center gap-6">
+              {/*}
               <button
                 type="button"
                 className="cursor-pointer flex items-center justify-center gap-2 w-full bg-[#836740] text-white py-2 px-4 rounded-lg hover:bg-[#614f29] transition"
@@ -118,7 +120,7 @@ export default function SignIn() {
                 <span className="mx-3 text-gray-500 text-sm">OR</span>
                 <hr className="flex-grow border-gray-300" />
               </div>
-
+*/}
               <button
                 onClick={() => signIn("google", { callbackUrl: "/profile" })}
                 className="cursor-pointer flex items-center justify-center gap-2 w-full border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-100 transition"

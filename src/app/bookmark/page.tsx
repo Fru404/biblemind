@@ -72,7 +72,7 @@ export default function BookmarksPage() {
       }
 
       // 5. Merge for display
-      const merged = [...supabaseBookmarks, ...newBookmarks];
+      const merged = [...supabaseBookmarks, ...newBookmarks].reverse();
       setBookmarks(merged);
 
       // Update localStorage with merged bookmarks
@@ -85,18 +85,39 @@ export default function BookmarksPage() {
   // Load local bookmarks immediately for fast UI
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("bookmarked") || "[]");
-    setBookmarks(stored);
+    setBookmarks(stored.reverse());
   }, []);
 
-  const deleteBookmark = (id: string) => {
+  const deleteBookmark = async (id: string) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this bookmark?"
     );
     if (!confirmDelete) return;
 
-    const updated = bookmarks.filter((bm) => bm.id !== id);
-    setBookmarks(updated);
-    localStorage.setItem("bookmarked", JSON.stringify(updated));
+    try {
+      // ✅ Delete from Supabase
+      const { error } = await supabase
+        .from("bookmark_table")
+        .delete()
+
+        .eq("email", session?.user?.email);
+
+      if (error) {
+        console.error("Error deleting from Supabase:", error.message);
+        alert("Failed to delete bookmark from the server.");
+        return;
+      }
+
+      // ✅ Update local cache
+      const updated = bookmarks.filter((bm) => bm.id !== id);
+      setBookmarks(updated);
+      localStorage.setItem("bookmarked", JSON.stringify(updated));
+
+      console.log("Bookmark deleted from Supabase and cache.");
+    } catch (err) {
+      console.error("Unexpected error deleting bookmark:", err);
+      alert("Something went wrong while deleting the bookmark.");
+    }
   };
 
   return (

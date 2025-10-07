@@ -34,7 +34,7 @@ export default function Profile() {
           {/* Burger button opens drawer */}
 
           <div className="text-xl md:text-2xl font-bold tracking-wide">
-            <Link href="/">BibleMind</Link>
+            <Link href="/">Biblemind</Link>
           </div>
         </div>
 
@@ -115,7 +115,6 @@ export default function Profile() {
                 alt="Bible"
                 className="object-cover w-full h-full absolute inset-0 group-hover:brightness-90 transition"
               />
-              sx
             </div>
             <div className="p-4">
               <h2 className="text-lg font-semibold text-gray-800 group-hover:text-[#8B0000]">
@@ -168,13 +167,6 @@ export default function Profile() {
           <p className="text-gray-600 break-words">{session.user?.email}</p>
 
           <div className="mt-6 flex flex-col gap-4">
-            <Link
-              href="/bookmark"
-              className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg transition"
-              onClick={() => setDrawerOpen(false)}
-            >
-              My Bookmarks
-            </Link>
             <Link
               href="/about"
               className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg transition"
