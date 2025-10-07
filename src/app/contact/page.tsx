@@ -2,15 +2,17 @@
 import React from "react";
 import Link from "next/link";
 import { FaPaperPlane } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 export default function Contact() {
+  const router = useRouter();
   return (
     <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
       {/* NAVBAR */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 bg-[#8B0000] text-white shadow-md">
-        <Link href="/" className="hover:underline">
-          ← Back To Home
-        </Link>
+        <button onClick={() => router.back()} className="hover:underline">
+          ← Back
+        </button>
       </nav>
 
       {/* MAIN CONTENT */}

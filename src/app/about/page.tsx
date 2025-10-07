@@ -2,15 +2,17 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function AboutPage() {
+  const router = useRouter();
   return (
     <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
       {/* NAVBAR */}
       <nav className="relative z-20 mt-6 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md rounded-2xl transition-all duration-300 ease-in-out w-11/12 max-w-6xl mx-auto">
-        <Link href="/" className="hover:underline">
-          ← Back To Home
-        </Link>
+        <button onClick={() => router.back()} className="hover:underline">
+          ← Back
+        </button>
         <h1 className="text-lg font-semibold">About</h1>
       </nav>
 

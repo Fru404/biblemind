@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 interface Bookmark {
   id: string;
@@ -25,6 +26,7 @@ export default function BookmarksPage() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_KEY!
   );
+  const router = useRouter();
 
   // Sync bookmarks with Supabase when user signs in
   useEffect(() => {
@@ -124,9 +126,9 @@ export default function BookmarksPage() {
     <div className="flex flex-col min-h-screen bg-[#f5f5f5] text-gray-900">
       {/* NAVBAR */}
       <nav className="relative z-20 mt-6 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md rounded-2xl transition-all duration-300 ease-in-out w-11/12 max-w-6xl mx-auto">
-        <Link href="/" className="hover:underline">
-          ← Back To Home
-        </Link>
+        <button onClick={() => router.back()} className="hover:underline">
+          ← Back
+        </button>
       </nav>
 
       {/* MAIN CONTENT */}

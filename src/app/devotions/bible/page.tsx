@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import AIbiblemind from "../../component/AIbiblemind";
+import { useRouter } from "next/router";
 
 const API_KEY = process.env.NEXT_PUBLIC_BIBLE_API_KEY;
 if (!API_KEY) {
@@ -40,7 +41,7 @@ export default function BibleReaderPage() {
   const [selectedChapter, setSelectedChapter] = useState<string>("");
   const [selectedVerse, setSelectedVerse] = useState<string>("");
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   const verseRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   // Example translation: World English Bible
@@ -122,9 +123,9 @@ export default function BibleReaderPage() {
       {/* Navbar */}
       <nav className="relative z-20 mt-6 flex items-center justify-between px-4 py-3 bg-[#8B0000] text-white shadow-md rounded-2xl transition-all duration-300 ease-in-out w-11/12 max-w-6xl mx-auto">
         <h1 className="text-xl font-bold">Bible</h1>
-        <Link href="/" className="hover:text-gray-300 transition">
-          Back to Home
-        </Link>
+        <button onClick={() => router.back()} className="hover:underline">
+          ← Back
+        </button>
       </nav>
 
       <main className="flex-grow px-4 py-6 md:px-12">
