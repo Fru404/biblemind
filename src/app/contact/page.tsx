@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { FaPaperPlane } from "react-icons/fa";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Contact() {
   const router = useRouter();

@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import AIbiblemind from "../../component/AIbiblemind";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const API_KEY = process.env.NEXT_PUBLIC_BIBLE_API_KEY;
 if (!API_KEY) {
