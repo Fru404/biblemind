@@ -67,7 +67,9 @@ export async function bookMark(
     } else {
       console.log("Bookmarks inserted successfully!");
     }
+    localStorage.removeItem("bookmarked");
   }
+  
 }
 
 // Helper function to generate a summary
