@@ -45,7 +45,7 @@ export default function BibleReaderPage() {
   const verseRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   // Example translation: World English Bible
-  const bibleId = "179568874c45066f-01";
+  const bibleId = "bba9f40183526463-01";
 
   // Fetch all books
   useEffect(() => {
